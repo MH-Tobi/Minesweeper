@@ -1,24 +1,27 @@
 #include "MainWindow.h"
-#include <cstdint>
-#include <array>
-#include <QWidget>
-#include <QApplication>
-#include <QPushButton>
-#include <QMenuBar>
-#include <QMenu>
-#include <QAction>
-#include <QWindow>
-#include <QAbstractScrollArea>
-#include <QStyle>
-
-#include <random>
 
 #include <QHBoxLayout>
-#include <QGroupBox>
-#include <QList>
+#include <QWidget>
+#include <QMenuBar>
+#include <QApplication>
+#include <QPushButton>
+#include <random>
+#include <QLineEdit>
+#include <QLabel>
+#include <QFormLayout>
+
+//#include <QMenu>
+//#include <QAction>
+//#include <QWindow>
+//#include <QAbstractScrollArea>
+//#include <QStyle>
+//#include <QGroupBox>
+//#include <QList>
+//#include <QValidator>
+//#include <QIntValidator>
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(20), _sum_mines(50), _Playfield(new QWidget(this))//, _Fields(0)
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(20), _sum_mines(50), _Playfield(new QWidget(this)), _field_size(40)
 {
     QHBoxLayout *_Windowlayout = new QHBoxLayout;
     _Windowlayout->setContentsMargins(5, 5, 5, 5);
@@ -37,17 +40,16 @@ void MainWindow::createMenu()
     _MenuBar = new QMenuBar;
 
     _app_menu = new QMenu("App", this);
+    _info_menu = new QMenu("Info", this);
+
     _new_game_action = _app_menu->addAction("New");
     _settings_action = _app_menu->addAction("Settings");
     _quit_action = _app_menu->addAction("Quit");
 
-    _MenuBar->addMenu(_app_menu);
-
-    _info_menu = new QMenu("Info", this);
-
     _qt_info_action = _info_menu->addAction("About Qt");
     _other_info_action = _info_menu->addAction("About Other");
 
+    _MenuBar->addMenu(_app_menu);
     _MenuBar->addMenu(_info_menu);
 
     connect(_new_game_action, &QAction::triggered, this, &MainWindow::NewGame);
@@ -69,7 +71,7 @@ void MainWindow::AboutQt()
 
 void MainWindow::NewGame()
 {
-    _Playfield->resize(FIELD_SIZE*_columns, FIELD_SIZE*_rows);
+    _Playfield->resize(_field_size*_columns, _field_size*_rows);
     
     _GameStarted=false;
     
@@ -85,11 +87,10 @@ void MainWindow::createFields()
         field->close();
     }
     
-    
     _Fields.clear();
 
-    std::uint16_t k;
-    std::uint16_t l;
+    uint16_t k;
+    uint16_t l;
     
     for (uint16_t i = 0; i < _rows*_columns; i++)
     {
@@ -98,8 +99,8 @@ void MainWindow::createFields()
         QPushButton *Button = new QPushButton(_Playfield);
         _Fields.append(Button);
         
-        Button->setFixedSize(FIELD_SIZE, FIELD_SIZE);
-        Button->move(l*FIELD_SIZE, k*FIELD_SIZE);
+        Button->setFixedSize(_field_size, _field_size);
+        Button->move(l*_field_size, k*_field_size);
         Button->show();
         
         connect(Button, &QPushButton::clicked, this, [this, i]{ fieldClicked(i); });
@@ -133,7 +134,7 @@ void MainWindow::fieldClicked(uint16_t field)
 
 void MainWindow::startGame(uint16_t field)
 {
-    std::int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
     if (((field/_columns) > 0) && ((field/_columns) < _rows-1)) // if selected field is between the top and bottom row
     {
@@ -209,27 +210,27 @@ void MainWindow::startGame(uint16_t field)
         }
     }
 
-    std::uint16_t Mines[_sum_mines];
-    
-    std::uint16_t count_mines = 0;
-    std::uint16_t column_range[2] = {0,0};
-    std::uint16_t row_range[2] = {0,0};
+    uint16_t Mines[_sum_mines];
+
+    uint16_t count_mines = 0;
+    uint16_t column_range[2] = {0,0};
+    uint16_t row_range[2] = {0,0};
    
-    std::uint16_t Map[_rows][_columns];
-    std::uint16_t f = 0;
+    uint16_t Map[_rows][_columns];
+    uint16_t f = 0;
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<std::uint16_t> distrib(0, ((_rows*_columns)-1));
+    std::uniform_int_distribution<uint16_t> distrib(0, ((_rows*_columns)-1));
 
     while (f < _sum_mines)
     {
-        std::uint16_t Val = distrib(gen);
-        std::uint16_t k = Val/_columns;
-        std::uint16_t l = Val % _columns;
+        uint16_t Val = distrib(gen);
+        uint16_t k = Val/_columns;
+        uint16_t l = Val % _columns;
         bool skip = false;
 
-        for (std::uint16_t i = 0; i < 9; i++)
+        for (uint16_t i = 0; i < 9; i++)
         {
             if (Val == unallowed_Fields[i])
             {
@@ -244,7 +245,7 @@ void MainWindow::startGame(uint16_t field)
                 Mines[f] = Val;
                 f++;
                 Map[k][l] = 9;
-                for (std::uint16_t i = 0; i < f-1; i++)
+                for (uint16_t i = 0; i < f-1; i++)
                 {
                     if (Val == Mines[i])
                     {
@@ -259,9 +260,9 @@ void MainWindow::startGame(uint16_t field)
         }
     }
 
-    for (std::uint16_t i = 0; i < _rows; i++)
+    for (uint16_t i = 0; i < _rows; i++)
     {
-        for (std::uint16_t j = 0; j < _columns; j++)
+        for (uint16_t j = 0; j < _columns; j++)
         {
             if (i > 0 && i < (_rows-1))
             {
@@ -291,9 +292,9 @@ void MainWindow::startGame(uint16_t field)
 
             count_mines = 0;
 
-            for (std::uint16_t m = row_range[0]; m <= row_range[1]; m++)
+            for (uint16_t m = row_range[0]; m <= row_range[1]; m++)
             {
-                for (std::uint16_t n = column_range[0]; n <= column_range[1]; n++)
+                for (uint16_t n = column_range[0]; n <= column_range[1]; n++)
                 {
                     if (Map[m][n] == 9)
                     {
@@ -311,4 +312,71 @@ void MainWindow::startGame(uint16_t field)
             }
         }
     }
+}
+
+void MainWindow::Settings()
+{
+    QWidget *window = new QWidget;
+
+    QLabel *label_number_rows = new QLabel("Number Rows");
+    QLabel *label_number_columns = new QLabel("Number Columns");
+    QLabel *label_number_mines = new QLabel("Number Mines");
+    QLabel *label_field_size = new QLabel("Field Size");
+
+    _edit_number_rows = new QLineEdit();
+    _edit_number_columns = new QLineEdit();
+    _edit_number_mines = new QLineEdit();
+    _edit_field_size = new QLineEdit();
+
+    _edit_number_rows->setText(QString::number(getNumRows()));
+    _edit_number_columns->setText(QString::number(getNumColumns()));
+    _edit_number_mines->setText(QString::number(getNumMines()));
+    _edit_field_size->setText(QString::number(getFieldSize()));
+
+    //_edit_number_rows->setValidator(new QIntValidator(5, 100));
+    //_edit_number_columns->setValidator(new QIntValidator(5, 100));
+    //_edit_number_mines->setValidator(new QIntValidator(1, 100));
+    //_edit_field_size->setValidator(new QIntValidator(1, 50));
+
+    QPushButton *button_set = new QPushButton("Set");
+    QPushButton *button_reset = new QPushButton("Reset");
+    QPushButton *button_cancel = new QPushButton("Cancel");
+
+    QVBoxLayout *main_layout = new QVBoxLayout(window);
+
+    QFormLayout *settings_layout = new QFormLayout(window);
+    settings_layout->addRow(label_number_rows, _edit_number_rows);
+    settings_layout->addRow(label_number_columns, _edit_number_columns);
+    settings_layout->addRow(label_number_mines, _edit_number_mines);
+    settings_layout->addRow(label_field_size, _edit_field_size);
+    
+    QHBoxLayout *button_layout = new QHBoxLayout(window);
+    button_layout->addWidget(button_set);
+    button_layout->addWidget(button_reset);
+    button_layout->addWidget(button_cancel);
+
+    main_layout->addLayout(settings_layout);
+    main_layout->addLayout(button_layout);
+
+    connect(button_set, &QPushButton::clicked, this, [this]{setSettings(); });
+
+    window->show();
+}
+
+uint16_t MainWindow::getNumRows()    {return _rows;}
+uint16_t MainWindow::getNumColumns() {return _columns;}
+uint16_t MainWindow::getNumMines()   {return _sum_mines;}
+uint16_t MainWindow::getFieldSize()  {return _field_size;}
+
+void MainWindow::setNumRows(uint16_t Value)    {_rows = Value;}
+void MainWindow::setNumColumns(uint16_t Value) {_columns = Value;}
+void MainWindow::setNumMines(uint16_t Value)   {_sum_mines = Value;}
+void MainWindow::setFieldSize(uint16_t Value)  {_field_size = Value;}
+
+void MainWindow::setSettings()
+{
+    setNumRows(_edit_number_rows->text().toInt());
+    setNumColumns(_edit_number_columns->text().toInt());
+    setNumMines(_edit_number_mines->text().toInt());
+    setFieldSize(_edit_field_size->text().toInt());
 }
