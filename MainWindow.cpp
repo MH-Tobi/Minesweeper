@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QFormLayout>
+#include "Field.h"
 
 //#include <QMenu>
 //#include <QAction>
@@ -21,7 +22,7 @@
 //#include <QIntValidator>
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(20), _sum_mines(50), _Playfield(new QWidget(this)), _field_size(40)
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(2), _columns(2), _sum_mines(2), _Playfield(new QWidget(this)), _field_size(40)
 {
     QHBoxLayout *_Windowlayout = new QHBoxLayout;
     _Windowlayout->setContentsMargins(5, 5, 5, 5);
@@ -96,117 +97,119 @@ void MainWindow::createFields()
     {
         k = i/_columns;
         l = i % _columns;
-        QPushButton *Button = new QPushButton(_Playfield);
-        _Fields.append(Button);
+        //QPushButton *Button = new QPushButton(_Playfield);
+        Field *field = new Field(i, _field_size, _Playfield);
+        _Fields.append(field);
         
-        Button->setFixedSize(_field_size, _field_size);
-        Button->move(l*_field_size, k*_field_size);
-        Button->show();
+        field->QPushButton::setFixedSize(field->getFieldSize(), field->getFieldSize());
+        field->QPushButton::move(l*field->getFieldSize(), k*field->getFieldSize());
+        field->QPushButton::show();
         
-        connect(Button, &QPushButton::clicked, this, [this, i]{ fieldClicked(i); });
+        connect(field, &QPushButton::clicked, this, [this, field]{ fieldClicked(field); });
     }
 }
 
-void MainWindow::fieldClicked(uint16_t field)
+void MainWindow::fieldClicked(Field *field)
 {
     if (_GameStarted)
     {
-        if (_Fields[field]->accessibleName() == "9")
+        if (field->getFieldIsMine() == 9)
         {
-            _Fields[field]->setStyleSheet("background-color: red;");
-            _Fields[field]->setFlat(true);
-            _Fields[field]->setEnabled(false);
+            field->QPushButton::setStyleSheet("background-color: red;");
+            field->setFlat(true);
+            field->QPushButton::setEnabled(false);
         }else{
-            _Fields[field]->setText(_Fields[field]->accessibleName());
-            _Fields[field]->setFlat(true);
-            _Fields[field]->setDisabled(true);
+            field->setText(QString::number(field->getFieldNearMines()));
+            field->setFlat(true);
+            field->QPushButton::setDisabled(true);
         }
         
     }else{
         startGame(field);
         _GameStarted = true;
-        _Fields[field]->setFlat(true);
-        _Fields[field]->setDisabled(true);
-        _Fields[field]->setText("0");
+        field->setFlat(true);
+        field->QPushButton::setDisabled(true);
+        field->setText("0");
     }
     
 }
 
-void MainWindow::startGame(uint16_t field)
+void MainWindow::startGame(Field *field)
 {
     int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    uint16_t Field_ID = field->getFieldID();
 
-    if (((field/_columns) > 0) && ((field/_columns) < _rows-1)) // if selected field is between the top and bottom row
+    if (((Field_ID/_columns) > 0) && ((Field_ID/_columns) < _rows-1)) // if selected field is between the top and bottom row
     {
-        if (((field % _columns) > 0) && ((field % _columns) < _columns))// if selected field is between the left and right column
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
         {
-            unallowed_Fields[0] = field - _columns - 1;
-            unallowed_Fields[1] = field - _columns;
-            unallowed_Fields[2] = field - _columns + 1;
-            unallowed_Fields[3] = field - 1;
-            unallowed_Fields[4] = field;
-            unallowed_Fields[5] = field + 1;
-            unallowed_Fields[6] = field + _columns - 1;
-            unallowed_Fields[7] = field + _columns;
-            unallowed_Fields[8] = field + _columns + 1;
-        }else if ((field % _columns) > 0)   // if selected field is in the right column
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - _columns + 1;
+            unallowed_Fields[3] = Field_ID - 1;
+            unallowed_Fields[4] = Field_ID;
+            unallowed_Fields[5] = Field_ID + 1;
+            unallowed_Fields[6] = Field_ID + _columns - 1;
+            unallowed_Fields[7] = Field_ID + _columns;
+            unallowed_Fields[8] = Field_ID + _columns + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
         {
-            unallowed_Fields[0] = field - _columns - 1;
-            unallowed_Fields[1] = field - _columns;
-            unallowed_Fields[2] = field - 1;
-            unallowed_Fields[3] = field;
-            unallowed_Fields[4] = field + _columns - 1;
-            unallowed_Fields[5] = field + _columns;
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - 1;
+            unallowed_Fields[3] = Field_ID;
+            unallowed_Fields[4] = Field_ID + _columns - 1;
+            unallowed_Fields[5] = Field_ID + _columns;
         }else{  // if selected field is in the left column
-            unallowed_Fields[0] = field - _columns;
-            unallowed_Fields[1] = field - _columns + 1;
-            unallowed_Fields[2] = field;
-            unallowed_Fields[3] = field + 1;
-            unallowed_Fields[4] = field + _columns;
-            unallowed_Fields[5] = field + _columns + 1;
+            unallowed_Fields[0] = Field_ID - _columns;
+            unallowed_Fields[1] = Field_ID - _columns + 1;
+            unallowed_Fields[2] = Field_ID;
+            unallowed_Fields[3] = Field_ID + 1;
+            unallowed_Fields[4] = Field_ID + _columns;
+            unallowed_Fields[5] = Field_ID + _columns + 1;
         }
-    }else if ((field/_columns) > 0) // if selected field is in the bottom row
+    }else if ((Field_ID/_columns) > 0) // if selected field is in the bottom row
     {
-        if (((field % _columns) > 0) && ((field % _columns) < _columns))// if selected field is between the left and right column
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
         {
-            unallowed_Fields[0] = field - _columns - 1;
-            unallowed_Fields[1] = field - _columns;
-            unallowed_Fields[2] = field - _columns + 1;
-            unallowed_Fields[3] = field - 1;
-            unallowed_Fields[4] = field;
-            unallowed_Fields[5] = field + 1;
-        }else if ((field % _columns) > 0)   // if selected field is in the right column
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - _columns + 1;
+            unallowed_Fields[3] = Field_ID - 1;
+            unallowed_Fields[4] = Field_ID;
+            unallowed_Fields[5] = Field_ID + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
         {
-            unallowed_Fields[0] = field - _columns - 1;
-            unallowed_Fields[1] = field - _columns;
-            unallowed_Fields[2] = field - 1;
-            unallowed_Fields[3] = field;
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - 1;
+            unallowed_Fields[3] = Field_ID;
         }else{  // if selected field is in the left column
-            unallowed_Fields[0] = field - _columns;
-            unallowed_Fields[1] = field - _columns + 1;
-            unallowed_Fields[2] = field;
-            unallowed_Fields[3] = field + 1;
+            unallowed_Fields[0] = Field_ID - _columns;
+            unallowed_Fields[1] = Field_ID - _columns + 1;
+            unallowed_Fields[2] = Field_ID;
+            unallowed_Fields[3] = Field_ID + 1;
         }
     }else{  // if selected field is in the top row
-        if (((field % _columns) > 0) && ((field % _columns) < _columns))// if selected field is between the left and right column
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
         {
-            unallowed_Fields[0] = field - 1;
-            unallowed_Fields[1] = field;
-            unallowed_Fields[2] = field + 1;
-            unallowed_Fields[3] = field + _columns - 1;
-            unallowed_Fields[4] = field + _columns;
-            unallowed_Fields[5] = field + _columns + 1;
-        }else if ((field % _columns) > 0)   // if selected field is in the right column
+            unallowed_Fields[0] = Field_ID - 1;
+            unallowed_Fields[1] = Field_ID;
+            unallowed_Fields[2] = Field_ID + 1;
+            unallowed_Fields[3] = Field_ID + _columns - 1;
+            unallowed_Fields[4] = Field_ID + _columns;
+            unallowed_Fields[5] = Field_ID + _columns + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
         {
-            unallowed_Fields[0] = field - 1;
-            unallowed_Fields[1] = field;
-            unallowed_Fields[2] = field + _columns - 1;
-            unallowed_Fields[3] = field + _columns;
+            unallowed_Fields[0] = Field_ID - 1;
+            unallowed_Fields[1] = Field_ID;
+            unallowed_Fields[2] = Field_ID + _columns - 1;
+            unallowed_Fields[3] = Field_ID + _columns;
         }else{  // if selected field is in the left column
-            unallowed_Fields[0] = field + 1;
-            unallowed_Fields[1] = field + _columns - 1;
-            unallowed_Fields[2] = field + _columns;
-            unallowed_Fields[3] = field + _columns + 1;
+            unallowed_Fields[0] = Field_ID + 1;
+            unallowed_Fields[1] = Field_ID + _columns - 1;
+            unallowed_Fields[2] = Field_ID + _columns;
+            unallowed_Fields[3] = Field_ID + _columns + 1;
         }
     }
 
@@ -304,11 +307,11 @@ void MainWindow::startGame(uint16_t field)
             }
             if (Map[i][j] != 9)
             {
-                _Fields[i*_columns+j]->setAccessibleName(QString::number(count_mines));
-                //_Fields[i*_columns+j]->setText(QString::number(count_mines));
+                _Fields[i*_columns+j]->setFieldNearMines(count_mines);
+                _Fields[i*_columns+j]->setFieldIsMine(false);
             }else{
-                _Fields[i*_columns+j]->setAccessibleName("9");
-                //_Fields[i*_columns+j]->setText("9");
+                _Fields[i*_columns+j]->setFieldNearMines(9);
+                _Fields[i*_columns+j]->setFieldIsMine(true);
             }
         }
     }

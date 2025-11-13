@@ -13,6 +13,8 @@ qt_add_executable(Minesweeper
     main.cpp
     MainWindow.cpp
     MainWindow.h
+    Field.cpp
+    Field.h
     #window.ui
 )
 

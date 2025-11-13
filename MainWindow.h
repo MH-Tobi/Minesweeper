@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-
+class Field;
 class QPushButton;
 class QMenu;
 class QMenuBar;
@@ -37,7 +37,7 @@ class MainWindow : public QWidget
 
         void createMenu();
         void createFields();
-        void startGame(uint16_t field);
+        void startGame(Field *field);
         
         bool _GameStarted;
         
@@ -58,17 +58,15 @@ class MainWindow : public QWidget
         QLineEdit *_edit_number_mines;
         QLineEdit *_edit_field_size;
 
-        QList<QPushButton *> _Fields;
+        QList<Field *> _Fields;
         
         uint16_t _rows;
         uint16_t _columns;
         uint16_t _sum_mines;
         uint16_t _field_size;
 
-        int FIELD_SIZE = 40;
-
     public slots:
-        void fieldClicked(uint16_t field);
+        void fieldClicked(Field *field);
 
     signals:
 };
