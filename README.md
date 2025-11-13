@@ -23,9 +23,11 @@ A new game can also be started if desired.
 ## To-Do's
 
 - [ ] Implement Settings
-  - [ ] Changing the number of rows
-  - [ ] Changing the number of columns
-  - [ ] Changing the number of mines
+  - [x] Changing the number of rows
+  - [x] Changing the number of columns
+  - [x] Changing the number of mines
+  - [x] Changing the Size of the Fields
+  - [ ] implement Setting-Validation
 - [ ] Implement Info about other things
 - [ ] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
 - [ ] Implement a Reaction when you encounter a mine
