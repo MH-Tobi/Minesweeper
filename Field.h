@@ -1,15 +1,15 @@
 #pragma once
 
 #include <QPushButton>
-#include <QWidget>
 #include "MainWindow.h"
 
-//class QWidget;
-//class QPushButton;
-class Field : public QWidget , public QPushButton
+
+class Field : public QPushButton
 {
+    Q_OBJECT
+
     public:
-        Field(uint16_t id, uint8_t size, QWidget *parent);
+        Field(uint16_t id, uint8_t size, QWidget *parent, MainWindow *game);
         ~Field();
 
         uint16_t getFieldID();
@@ -22,16 +22,16 @@ class Field : public QWidget , public QPushButton
         void setFieldIsMine(bool is_mine);
 
         uint8_t getFieldNearMines();
-        void setFieldNearMines(uint8_t near_mines);
-
-
-    private:
+        void setFieldNearMines(int8_t near_mines);
 
         uint16_t _FieldID;
+        
+    private:
         uint8_t _FieldSize;
         bool _FieldisMine;
-        uint8_t _FieldnearMines;
-        QPushButton *_Button;
-
+        int8_t _FieldnearMines;
+        
+    public slots:
+        void fieldClicked();
 
 };

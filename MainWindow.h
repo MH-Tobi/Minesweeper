@@ -37,7 +37,6 @@ class MainWindow : public QWidget
 
         void createMenu();
         void createFields();
-        void startGame(Field *field);
         
         bool _GameStarted;
         
@@ -64,9 +63,9 @@ class MainWindow : public QWidget
         uint16_t _columns;
         uint16_t _sum_mines;
         uint16_t _field_size;
-
+    
     public slots:
-        void fieldClicked(Field *field);
+        void startGame(uint16_t id);
 
     signals:
 };
