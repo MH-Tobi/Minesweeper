@@ -325,10 +325,7 @@ void MainWindow::Settings()
     _edit_number_mines = new QLineEdit();
     _edit_field_size = new QLineEdit();
 
-    _edit_number_rows->setText(QString::number(getNumRows()));
-    _edit_number_columns->setText(QString::number(getNumColumns()));
-    _edit_number_mines->setText(QString::number(getNumMines()));
-    _edit_field_size->setText(QString::number(getFieldSize()));
+    resetSettings();
 
     //_edit_number_rows->setValidator(new QIntValidator(5, 100));
     //_edit_number_columns->setValidator(new QIntValidator(5, 100));
