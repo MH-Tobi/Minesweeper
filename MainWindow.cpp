@@ -313,7 +313,7 @@ void MainWindow::startGame(uint16_t id)
 
 void MainWindow::Settings()
 {
-    QWidget *window = new QWidget;
+    _Settings_Window = new QWidget;
 
     QLabel *label_number_rows = new QLabel("Number Rows");
     QLabel *label_number_columns = new QLabel("Number Columns");
@@ -339,15 +339,15 @@ void MainWindow::Settings()
     QPushButton *button_reset = new QPushButton("Reset");
     QPushButton *button_cancel = new QPushButton("Cancel");
 
-    QVBoxLayout *main_layout = new QVBoxLayout(window);
+    QVBoxLayout *main_layout = new QVBoxLayout(_Settings_Window);
 
-    QFormLayout *settings_layout = new QFormLayout(window);
+    QFormLayout *settings_layout = new QFormLayout(_Settings_Window);
     settings_layout->addRow(label_number_rows, _edit_number_rows);
     settings_layout->addRow(label_number_columns, _edit_number_columns);
     settings_layout->addRow(label_number_mines, _edit_number_mines);
     settings_layout->addRow(label_field_size, _edit_field_size);
     
-    QHBoxLayout *button_layout = new QHBoxLayout(window);
+    QHBoxLayout *button_layout = new QHBoxLayout(_Settings_Window);
     button_layout->addWidget(button_set);
     button_layout->addWidget(button_reset);
     button_layout->addWidget(button_cancel);
@@ -356,8 +356,10 @@ void MainWindow::Settings()
     main_layout->addLayout(button_layout);
 
     connect(button_set, &QPushButton::clicked, this, [this]{setSettings(); });
+    connect(button_reset, &QPushButton::clicked, this, [this]{resetSettings(); });
+    connect(button_cancel, &QPushButton::clicked, this, [this]{closeSettings(); });
 
-    window->show();
+    _Settings_Window->show();
 }
 
 uint16_t MainWindow::getNumRows()    {return _rows;}
@@ -376,4 +378,19 @@ void MainWindow::setSettings()
     setNumColumns(_edit_number_columns->text().toInt());
     setNumMines(_edit_number_mines->text().toInt());
     setFieldSize(_edit_field_size->text().toInt());
+
+    _Settings_Window->close();
+}
+
+void MainWindow::resetSettings()
+{
+    _edit_number_rows->setText(QString::number(getNumRows()));
+    _edit_number_columns->setText(QString::number(getNumColumns()));
+    _edit_number_mines->setText(QString::number(getNumMines()));
+    _edit_field_size->setText(QString::number(getFieldSize()));
+}
+
+void MainWindow::closeSettings()
+{
+    _Settings_Window->close();
 }

@@ -31,9 +31,12 @@ class MainWindow : public QWidget
         void setFieldSize(uint16_t Value);
         
         void setSettings();
+        void resetSettings();
+        void closeSettings();
         
     private:
         QHBoxLayout *_Windowlayout;
+        
 
         void createMenu();
         void createFields();
@@ -41,6 +44,7 @@ class MainWindow : public QWidget
         bool _GameStarted;
         
         QWidget *_Playfield;
+        QWidget *_Settings_Window;
 
         QMenuBar *_MenuBar;
         QMenu *_app_menu;
