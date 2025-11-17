@@ -39,22 +39,22 @@ void Field::mousePressEvent(QMouseEvent *e)
 
 void Field::setFieldIcon()
 {
-    if(_FieldIsQuestionable)
+    if(_FieldIsMarked)
     {
-        _FieldIsMarked = true;
-        _FieldIsQuestionable = false;
-        
-        setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\flag.png"));
-        setIconSize(QSize(_FieldSize*3/4,_FieldSize*3/4));
-    }else if (_FieldIsMarked)
-    {
+        _FieldIsQuestionable = true;
         _FieldIsMarked = false;
+        
+        setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\questionmark.png"));
+        setIconSize(QSize(_FieldSize*3/4,_FieldSize*3/4));
+    }else if (_FieldIsQuestionable)
+    {
+        _FieldIsQuestionable = false;
 
         setIcon(QIcon());
     }else{
-        _FieldIsQuestionable = true;
+        _FieldIsMarked = true;
         
-        setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\questionmark.png"));
+        setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\flag.png"));
         setIconSize(QSize(_FieldSize*3/4,_FieldSize*3/4));
     }
 }
