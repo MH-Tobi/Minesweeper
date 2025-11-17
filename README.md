@@ -34,5 +34,5 @@ A new game can also be started if desired.
 - [ ] Implement a Reaction on success
 - [ ] Implement the usage of the right Mouse-Click to mark fields
 - [ ] Usage of Icons
+- [ ] Create a Bomb detection mouse
 - [ ] Clean up the Code :expressionless:
-
