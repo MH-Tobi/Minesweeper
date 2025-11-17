@@ -34,7 +34,6 @@ void Field::mousePressEvent(QMouseEvent *e)
     }else{
         emit clicked();
     }
-    
 }
 
 void Field::setFieldIcon()
