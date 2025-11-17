@@ -95,217 +95,209 @@ void MainWindow::createFields()
         field->QPushButton::move(l*field->getFieldSize(), k*field->getFieldSize());
         field->QPushButton::show();
         
-        connect(field, &QPushButton::clicked, this, [this, i]{startGame(i);});
+        connect(field, &QPushButton::clicked, this, [this, field]{fieldClicked(field);});
     }
 }
 
-// void MainWindow::fieldClicked(Field *field)
-// {
-//     if (_GameStarted)
-//     {
-//         if (field->getFieldIsMine())
-//         {
-//             field->QPushButton::setStyleSheet("background-color: red;");
-//             field->setFlat(true);
-//             field->QPushButton::setEnabled(false);
-//         }else{
-//             field->setText(QString::number(field->getFieldNearMines()));
-//             field->setFlat(true);
-//             field->QPushButton::setDisabled(true);
-//         }
-//     }else{
-//         startGame(field);
-//         _GameStarted = true;
-//         field->setFlat(true);
-//         field->QPushButton::setDisabled(true);
-//         field->setText("0");
-//     }
-// }
-
-void MainWindow::startGame(uint16_t id)
+void MainWindow::fieldClicked(Field *field)
 {
     if (!_GameStarted)
     {
         _GameStarted = true;
-    
-        int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
-        uint16_t Field_ID = id;
+        startGame(field->getFieldID());
+    }
 
-        if (((Field_ID/_columns) > 0) && ((Field_ID/_columns) < _rows-1)) // if selected field is between the top and bottom row
+    if (field->getFieldIsMine())
+    {
+        field->setStyleSheet("background-color: red;");
+        field->setFlat(true);
+        field->setEnabled(false);
+    }else{
+        field->setText(QString::number(field->getFieldNearMines()));
+        field->setFlat(true);
+        field->setDisabled(true);
+    }
+}
+
+void MainWindow::startGame(uint16_t id)
+{    
+    int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    uint16_t Field_ID = id;
+
+    if (((Field_ID/_columns) > 0) && ((Field_ID/_columns) < _rows-1)) // if selected field is between the top and bottom row
+    {
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
         {
-            if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
-            {
-                unallowed_Fields[0] = Field_ID - _columns - 1;
-                unallowed_Fields[1] = Field_ID - _columns;
-                unallowed_Fields[2] = Field_ID - _columns + 1;
-                unallowed_Fields[3] = Field_ID - 1;
-                unallowed_Fields[4] = Field_ID;
-                unallowed_Fields[5] = Field_ID + 1;
-                unallowed_Fields[6] = Field_ID + _columns - 1;
-                unallowed_Fields[7] = Field_ID + _columns;
-                unallowed_Fields[8] = Field_ID + _columns + 1;
-            }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-            {
-                unallowed_Fields[0] = Field_ID - _columns - 1;
-                unallowed_Fields[1] = Field_ID - _columns;
-                unallowed_Fields[2] = Field_ID - 1;
-                unallowed_Fields[3] = Field_ID;
-                unallowed_Fields[4] = Field_ID + _columns - 1;
-                unallowed_Fields[5] = Field_ID + _columns;
-            }else{  // if selected field is in the left column
-                unallowed_Fields[0] = Field_ID - _columns;
-                unallowed_Fields[1] = Field_ID - _columns + 1;
-                unallowed_Fields[2] = Field_ID;
-                unallowed_Fields[3] = Field_ID + 1;
-                unallowed_Fields[4] = Field_ID + _columns;
-                unallowed_Fields[5] = Field_ID + _columns + 1;
-            }
-        }else if ((Field_ID/_columns) > 0) // if selected field is in the bottom row
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - _columns + 1;
+            unallowed_Fields[3] = Field_ID - 1;
+            unallowed_Fields[4] = Field_ID;
+            unallowed_Fields[5] = Field_ID + 1;
+            unallowed_Fields[6] = Field_ID + _columns - 1;
+            unallowed_Fields[7] = Field_ID + _columns;
+            unallowed_Fields[8] = Field_ID + _columns + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
         {
-            if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - 1;
+            unallowed_Fields[3] = Field_ID;
+            unallowed_Fields[4] = Field_ID + _columns - 1;
+            unallowed_Fields[5] = Field_ID + _columns;
+        }else{  // if selected field is in the left column
+            unallowed_Fields[0] = Field_ID - _columns;
+            unallowed_Fields[1] = Field_ID - _columns + 1;
+            unallowed_Fields[2] = Field_ID;
+            unallowed_Fields[3] = Field_ID + 1;
+            unallowed_Fields[4] = Field_ID + _columns;
+            unallowed_Fields[5] = Field_ID + _columns + 1;
+        }
+    }else if ((Field_ID/_columns) > 0) // if selected field is in the bottom row
+    {
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
+        {
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - _columns + 1;
+            unallowed_Fields[3] = Field_ID - 1;
+            unallowed_Fields[4] = Field_ID;
+            unallowed_Fields[5] = Field_ID + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
+        {
+            unallowed_Fields[0] = Field_ID - _columns - 1;
+            unallowed_Fields[1] = Field_ID - _columns;
+            unallowed_Fields[2] = Field_ID - 1;
+            unallowed_Fields[3] = Field_ID;
+        }else{  // if selected field is in the left column
+            unallowed_Fields[0] = Field_ID - _columns;
+            unallowed_Fields[1] = Field_ID - _columns + 1;
+            unallowed_Fields[2] = Field_ID;
+            unallowed_Fields[3] = Field_ID + 1;
+        }
+    }else{  // if selected field is in the top row
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
+        {
+            unallowed_Fields[0] = Field_ID - 1;
+            unallowed_Fields[1] = Field_ID;
+            unallowed_Fields[2] = Field_ID + 1;
+            unallowed_Fields[3] = Field_ID + _columns - 1;
+            unallowed_Fields[4] = Field_ID + _columns;
+            unallowed_Fields[5] = Field_ID + _columns + 1;
+        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
+        {
+            unallowed_Fields[0] = Field_ID - 1;
+            unallowed_Fields[1] = Field_ID;
+            unallowed_Fields[2] = Field_ID + _columns - 1;
+            unallowed_Fields[3] = Field_ID + _columns;
+        }else{  // if selected field is in the left column
+            unallowed_Fields[0] = Field_ID + 1;
+            unallowed_Fields[1] = Field_ID + _columns - 1;
+            unallowed_Fields[2] = Field_ID + _columns;
+            unallowed_Fields[3] = Field_ID + _columns + 1;
+        }
+    }
+
+    uint16_t Mines[_sum_mines];
+
+    uint16_t count_mines = 0;
+    uint16_t column_range[2] = {0,0};
+    uint16_t row_range[2] = {0,0};
+
+    uint16_t Map[_rows][_columns];
+    uint16_t f = 0;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<uint16_t> distrib(0, ((_rows*_columns)-1));
+
+    while (f < _sum_mines)
+    {
+        uint16_t Val = distrib(gen);
+        uint16_t k = Val/_columns;
+        uint16_t l = Val % _columns;
+        bool skip = false;
+
+        for (uint16_t i = 0; i < 9; i++)
+        {
+            if (Val == unallowed_Fields[i])
             {
-                unallowed_Fields[0] = Field_ID - _columns - 1;
-                unallowed_Fields[1] = Field_ID - _columns;
-                unallowed_Fields[2] = Field_ID - _columns + 1;
-                unallowed_Fields[3] = Field_ID - 1;
-                unallowed_Fields[4] = Field_ID;
-                unallowed_Fields[5] = Field_ID + 1;
-            }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-            {
-                unallowed_Fields[0] = Field_ID - _columns - 1;
-                unallowed_Fields[1] = Field_ID - _columns;
-                unallowed_Fields[2] = Field_ID - 1;
-                unallowed_Fields[3] = Field_ID;
-            }else{  // if selected field is in the left column
-                unallowed_Fields[0] = Field_ID - _columns;
-                unallowed_Fields[1] = Field_ID - _columns + 1;
-                unallowed_Fields[2] = Field_ID;
-                unallowed_Fields[3] = Field_ID + 1;
-            }
-        }else{  // if selected field is in the top row
-            if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
-            {
-                unallowed_Fields[0] = Field_ID - 1;
-                unallowed_Fields[1] = Field_ID;
-                unallowed_Fields[2] = Field_ID + 1;
-                unallowed_Fields[3] = Field_ID + _columns - 1;
-                unallowed_Fields[4] = Field_ID + _columns;
-                unallowed_Fields[5] = Field_ID + _columns + 1;
-            }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-            {
-                unallowed_Fields[0] = Field_ID - 1;
-                unallowed_Fields[1] = Field_ID;
-                unallowed_Fields[2] = Field_ID + _columns - 1;
-                unallowed_Fields[3] = Field_ID + _columns;
-            }else{  // if selected field is in the left column
-                unallowed_Fields[0] = Field_ID + 1;
-                unallowed_Fields[1] = Field_ID + _columns - 1;
-                unallowed_Fields[2] = Field_ID + _columns;
-                unallowed_Fields[3] = Field_ID + _columns + 1;
+                skip = true;
             }
         }
 
-        uint16_t Mines[_sum_mines];
-
-        uint16_t count_mines = 0;
-        uint16_t column_range[2] = {0,0};
-        uint16_t row_range[2] = {0,0};
-    
-        uint16_t Map[_rows][_columns];
-        uint16_t f = 0;
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<uint16_t> distrib(0, ((_rows*_columns)-1));
-
-        while (f < _sum_mines)
+        if (!skip)
         {
-            uint16_t Val = distrib(gen);
-            uint16_t k = Val/_columns;
-            uint16_t l = Val % _columns;
-            bool skip = false;
-
-            for (uint16_t i = 0; i < 9; i++)
+            if (f>0)
             {
-                if (Val == unallowed_Fields[i])
+                Mines[f] = Val;
+                f++;
+                Map[k][l] = 9;
+                for (uint16_t i = 0; i < f-1; i++)
                 {
-                    skip = true;
-                }
-            }
-
-            if (!skip)
-            {
-                if (f>0)
-                {
-                    Mines[f] = Val;
-                    f++;
-                    Map[k][l] = 9;
-                    for (uint16_t i = 0; i < f-1; i++)
+                    if (Val == Mines[i])
                     {
-                        if (Val == Mines[i])
-                        {
-                            f--;
-                        }
+                        f--;
                     }
-                }else{
-                    Mines[f] = Val;
-                    f++;
-                    Map[k][l] = 9;
                 }
+            }else{
+                Mines[f] = Val;
+                f++;
+                Map[k][l] = 9;
             }
         }
+    }
 
-        for (uint16_t i = 0; i < _rows; i++)
+    for (uint16_t i = 0; i < _rows; i++)
+    {
+        for (uint16_t j = 0; j < _columns; j++)
         {
-            for (uint16_t j = 0; j < _columns; j++)
+            if (i > 0 && i < (_rows-1))
             {
-                if (i > 0 && i < (_rows-1))
-                {
-                    row_range[0] = i-1;
-                    row_range[1] = i+1;
-                }else if (i > 0)
-                {
-                    row_range[0] = i-1;
-                    row_range[1] = i;
-                }else{
-                    row_range[0] = i;
-                    row_range[1] = i+1;
-                }
+                row_range[0] = i-1;
+                row_range[1] = i+1;
+            }else if (i > 0)
+            {
+                row_range[0] = i-1;
+                row_range[1] = i;
+            }else{
+                row_range[0] = i;
+                row_range[1] = i+1;
+            }
 
-                if (j > 0 && j < (_columns-1))
-                {
-                    column_range[0] = j-1;
-                    column_range[1] = j+1;
-                }else if (j > 0)
-                {
-                    column_range[0] = j-1;
-                    column_range[1] = j;
-                }else{
-                    column_range[0] = j;
-                    column_range[1] = j+1;
-                }
+            if (j > 0 && j < (_columns-1))
+            {
+                column_range[0] = j-1;
+                column_range[1] = j+1;
+            }else if (j > 0)
+            {
+                column_range[0] = j-1;
+                column_range[1] = j;
+            }else{
+                column_range[0] = j;
+                column_range[1] = j+1;
+            }
 
-                count_mines = 0;
+            count_mines = 0;
 
-                for (uint16_t m = row_range[0]; m <= row_range[1]; m++)
+            for (uint16_t m = row_range[0]; m <= row_range[1]; m++)
+            {
+                for (uint16_t n = column_range[0]; n <= column_range[1]; n++)
                 {
-                    for (uint16_t n = column_range[0]; n <= column_range[1]; n++)
+                    if (Map[m][n] == 9)
                     {
-                        if (Map[m][n] == 9)
-                        {
-                            count_mines++;
-                        }
+                        count_mines++;
                     }
                 }
-                
-                if (Map[i][j] != 9)
-                {
-                    _Fields[i*_columns+j]->setFieldNearMines(count_mines);
-                    _Fields[i*_columns+j]->setFieldIsMine(false);
-                }else{
-                    _Fields[i*_columns+j]->setFieldNearMines(9);
-                    _Fields[i*_columns+j]->setFieldIsMine(true);
-                }
+            }
+            
+            if (Map[i][j] != 9)
+            {
+                _Fields[i*_columns+j]->setFieldNearMines(count_mines);
+                _Fields[i*_columns+j]->setFieldIsMine(false);
+            }else{
+                _Fields[i*_columns+j]->setFieldNearMines(9);
+                _Fields[i*_columns+j]->setFieldIsMine(true);
             }
         }
     }

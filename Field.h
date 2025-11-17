@@ -21,7 +21,7 @@ class Field : public QPushButton
         bool getFieldIsMine();
         void setFieldIsMine(bool is_mine);
 
-        uint8_t getFieldNearMines();
+        int8_t getFieldNearMines();
         void setFieldNearMines(int8_t near_mines);
 
         uint16_t _FieldID;
@@ -32,6 +32,4 @@ class Field : public QPushButton
         int8_t _FieldnearMines;
         
     public slots:
-        void fieldClicked();
-
 };

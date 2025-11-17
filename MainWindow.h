@@ -37,9 +37,9 @@ class MainWindow : public QWidget
     private:
         QHBoxLayout *_Windowlayout;
         
-
         void createMenu();
         void createFields();
+        void startGame(uint16_t id);
         
         bool _GameStarted;
         
@@ -69,7 +69,7 @@ class MainWindow : public QWidget
         uint16_t _field_size;
     
     public slots:
-        void startGame(uint16_t id);
+        void fieldClicked(Field *field);
 
     signals:
 };
