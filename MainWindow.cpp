@@ -88,7 +88,7 @@ void MainWindow::createFields()
         k = i/_columns;
         l = i % _columns;
 
-        Field *field = new Field(i, _field_size, _Playfield, this);
+        Field *field = new Field(i, _field_size, _Playfield);
         _Fields.append(field);
         
         field->QPushButton::setFixedSize(field->getFieldSize(), field->getFieldSize());
