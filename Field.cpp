@@ -4,7 +4,7 @@
 #include "MainWindow.h"
 
 
-Field::Field(uint16_t id, uint8_t size, QWidget *parent, MainWindow *game) : QPushButton(parent), _FieldID(id), _FieldSize(size), _FieldnearMines(-1)
+Field::Field(uint16_t id, uint8_t size, QWidget *parent) : QPushButton(parent), _FieldID(id), _FieldSize(size), _FieldnearMines(-1)
 {}
 
 Field::~Field()

@@ -9,7 +9,7 @@ class Field : public QPushButton
     Q_OBJECT
 
     public:
-        Field(uint16_t id, uint8_t size, QWidget *parent, MainWindow *game);
+        Field(uint16_t id, uint8_t size, QWidget *parent);
         ~Field();
 
         uint16_t getFieldID();
