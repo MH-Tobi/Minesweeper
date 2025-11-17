@@ -107,15 +107,21 @@ void MainWindow::fieldClicked(Field *field)
         startGame(field->getFieldID());
     }
 
-    if (field->getFieldIsMine())
+    if (!(field->getFieldIsMarked() || field->getFieldIsQuestionable()))
     {
-        field->setStyleSheet("background-color: red;");
-        field->setFlat(true);
-        field->setEnabled(false);
-    }else{
-        field->setText(QString::number(field->getFieldNearMines()));
-        field->setFlat(true);
-        field->setDisabled(true);
+        if (field->getFieldIsMine())
+        {
+            //field->setStyleSheet("background-color: red;");
+            field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
+            field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
+
+            field->setFlat(true);
+            field->setEnabled(false);
+        }else{
+            field->setText(QString::number(field->getFieldNearMines()));
+            field->setFlat(true);
+            field->setDisabled(true);
+        }
     }
 }
 
