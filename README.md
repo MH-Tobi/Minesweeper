@@ -12,13 +12,17 @@ In this context, I was also able to try my hand at using [Qt](https://www.qt.io/
 
 ## Current status
 
-The application currently runs in a very rudimentary way.
+The application currently runs pretty good.
 
-The game can be started directly when the application is launched. Selecting a field only opens that selected field. The number of mines in the immediate vicinity is displayed. If a mine is hit, the field is highlighted in red.
-
+The game can be started immediately after launching the application. Selecting a field opens it.
+The number of mines in the immediate vicinity is displayed.
+If you select a field without mines nearby, all adjacent fields without mines are opened.
+If a mine is hit, the field is marked with a mine symbol.
 Continuing the current game is still possible.
 
 A new game can also be started if desired.
+
+You can also mark a field as questionable or as potentially mine (by right-clicking).
 
 ## To-Do's
 
@@ -29,7 +33,7 @@ A new game can also be started if desired.
   - [x] Changing the Size of the Fields
   - [ ] implement Setting-Validation
 - [ ] Implement Info about other things
-- [ ] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
+- [x] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
 - [ ] Implement a Reaction when you encounter a mine
 - [ ] Implement a Reaction on success
 - [x] Implement the usage of the right Mouse-Click to mark fields
