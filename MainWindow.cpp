@@ -121,88 +121,37 @@ void MainWindow::fieldClicked(Field *field)
             field->setText(QString::number(field->getFieldNearMines()));
             field->setFlat(true);
             field->setDisabled(true);
+
+            if (field->getFieldNearMines() == 0)
+            {
+                solveZeros(field->getFieldID());
+            }
         }
     }
 }
 
-void MainWindow::startGame(uint16_t id)
-{    
-    int16_t unallowed_Fields[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    uint16_t Field_ID = id;
+void MainWindow::solveZeros(uint16_t Field_ID)
+{
+    int16_t *nearFields = getNearFields(Field_ID);
 
-    if (((Field_ID/_columns) > 0) && ((Field_ID/_columns) < _rows-1)) // if selected field is between the top and bottom row
+    for (size_t i = 0; i < 9; i++)
     {
-        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
+        if (nearFields[i] != -1 && nearFields[i] != Field_ID)
         {
-            unallowed_Fields[0] = Field_ID - _columns - 1;
-            unallowed_Fields[1] = Field_ID - _columns;
-            unallowed_Fields[2] = Field_ID - _columns + 1;
-            unallowed_Fields[3] = Field_ID - 1;
-            unallowed_Fields[4] = Field_ID;
-            unallowed_Fields[5] = Field_ID + 1;
-            unallowed_Fields[6] = Field_ID + _columns - 1;
-            unallowed_Fields[7] = Field_ID + _columns;
-            unallowed_Fields[8] = Field_ID + _columns + 1;
-        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-        {
-            unallowed_Fields[0] = Field_ID - _columns - 1;
-            unallowed_Fields[1] = Field_ID - _columns;
-            unallowed_Fields[2] = Field_ID - 1;
-            unallowed_Fields[3] = Field_ID;
-            unallowed_Fields[4] = Field_ID + _columns - 1;
-            unallowed_Fields[5] = Field_ID + _columns;
-        }else{  // if selected field is in the left column
-            unallowed_Fields[0] = Field_ID - _columns;
-            unallowed_Fields[1] = Field_ID - _columns + 1;
-            unallowed_Fields[2] = Field_ID;
-            unallowed_Fields[3] = Field_ID + 1;
-            unallowed_Fields[4] = Field_ID + _columns;
-            unallowed_Fields[5] = Field_ID + _columns + 1;
-        }
-    }else if ((Field_ID/_columns) > 0) // if selected field is in the bottom row
-    {
-        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
-        {
-            unallowed_Fields[0] = Field_ID - _columns - 1;
-            unallowed_Fields[1] = Field_ID - _columns;
-            unallowed_Fields[2] = Field_ID - _columns + 1;
-            unallowed_Fields[3] = Field_ID - 1;
-            unallowed_Fields[4] = Field_ID;
-            unallowed_Fields[5] = Field_ID + 1;
-        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-        {
-            unallowed_Fields[0] = Field_ID - _columns - 1;
-            unallowed_Fields[1] = Field_ID - _columns;
-            unallowed_Fields[2] = Field_ID - 1;
-            unallowed_Fields[3] = Field_ID;
-        }else{  // if selected field is in the left column
-            unallowed_Fields[0] = Field_ID - _columns;
-            unallowed_Fields[1] = Field_ID - _columns + 1;
-            unallowed_Fields[2] = Field_ID;
-            unallowed_Fields[3] = Field_ID + 1;
-        }
-    }else{  // if selected field is in the top row
-        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns))// if selected field is between the left and right column
-        {
-            unallowed_Fields[0] = Field_ID - 1;
-            unallowed_Fields[1] = Field_ID;
-            unallowed_Fields[2] = Field_ID + 1;
-            unallowed_Fields[3] = Field_ID + _columns - 1;
-            unallowed_Fields[4] = Field_ID + _columns;
-            unallowed_Fields[5] = Field_ID + _columns + 1;
-        }else if ((Field_ID % _columns) > 0)   // if selected field is in the right column
-        {
-            unallowed_Fields[0] = Field_ID - 1;
-            unallowed_Fields[1] = Field_ID;
-            unallowed_Fields[2] = Field_ID + _columns - 1;
-            unallowed_Fields[3] = Field_ID + _columns;
-        }else{  // if selected field is in the left column
-            unallowed_Fields[0] = Field_ID + 1;
-            unallowed_Fields[1] = Field_ID + _columns - 1;
-            unallowed_Fields[2] = Field_ID + _columns;
-            unallowed_Fields[3] = Field_ID + _columns + 1;
+            if (!_Fields[nearFields[i]]->isFlat())
+            {
+                fieldClicked(_Fields[nearFields[i]]);
+            }
         }
     }
+    
+    delete nearFields;
+}
+
+void MainWindow::startGame(uint16_t id)
+{    
+    int16_t *unallowed_Fields = getNearFields(id);
+    uint16_t Field_ID = id;
 
     uint16_t Mines[_sum_mines];
 
@@ -307,6 +256,7 @@ void MainWindow::startGame(uint16_t id)
             }
         }
     }
+    delete unallowed_Fields;
 }
 
 void MainWindow::Settings()
@@ -388,4 +338,102 @@ void MainWindow::resetSettings()
 void MainWindow::closeSettings()
 {
     _Settings_Window->close();
+}
+
+int16_t* MainWindow::getNearFields(uint16_t Field_ID)
+{
+    int16_t *near_Fields = new int16_t[9]{-1,-1,-1,-1,-1,-1,-1,-1,-1};
+
+
+    if (((Field_ID/_columns) > 0) && ((Field_ID/_columns) < _rows-1)) // if selected field is between the top and bottom row
+    {
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns-1))
+        {
+            // if selected field is between the top and bottom row and between the left and right column
+            near_Fields[0] = Field_ID - _columns - 1;       // Top-Left
+            near_Fields[1] = Field_ID - _columns;           // Top
+            near_Fields[2] = Field_ID - _columns + 1;       // Top-Right
+            near_Fields[3] = Field_ID - 1;                  // Left
+            near_Fields[4] = Field_ID;                      // Field
+            near_Fields[5] = Field_ID + 1;                  // Right
+            near_Fields[6] = Field_ID + _columns - 1;       // Bottom-Left
+            near_Fields[7] = Field_ID + _columns;           // Bottom
+            near_Fields[8] = Field_ID + _columns + 1;       // Bottom-Right
+
+        }else if ((Field_ID % _columns) > 0)
+        {
+            // if selected field is between the top and bottom row and in the right column
+            near_Fields[0] = Field_ID - _columns - 1;       // Top-Left
+            near_Fields[1] = Field_ID - _columns;           // Top
+            near_Fields[2] = Field_ID - 1;                  // Left
+            near_Fields[3] = Field_ID;                      // Field
+            near_Fields[4] = Field_ID + _columns - 1;       // Bottom-Left
+            near_Fields[5] = Field_ID + _columns;           // Bottom
+
+        }else{
+            // if selected field is between the top and bottom row and in the left column
+            near_Fields[0] = Field_ID - _columns;           // Top
+            near_Fields[1] = Field_ID - _columns + 1;       // Top-Right
+            near_Fields[2] = Field_ID;                      // Field
+            near_Fields[3] = Field_ID + 1;                  // Right
+            near_Fields[4] = Field_ID + _columns;           // Bottom
+            near_Fields[5] = Field_ID + _columns + 1;       // Bottom-Right
+        }
+    }else if ((Field_ID/_columns) > 0) // if selected field is in the bottom row
+    {
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns-1))
+        {
+            // if selected field is in the bottom row and between the left and right column
+            near_Fields[0] = Field_ID - _columns - 1;       // Top-Left
+            near_Fields[1] = Field_ID - _columns;           // Top
+            near_Fields[2] = Field_ID - _columns + 1;       // Top-Right
+            near_Fields[3] = Field_ID - 1;                  // Left
+            near_Fields[4] = Field_ID;                      // Field
+            near_Fields[5] = Field_ID + 1;                  // Right
+
+        }else if ((Field_ID % _columns) > 0)
+        {
+            // if selected field is in the bottom row and in the right column
+            near_Fields[0] = Field_ID - _columns - 1;       // Top-Left
+            near_Fields[1] = Field_ID - _columns;           // Top
+            near_Fields[2] = Field_ID - 1;                  // Left
+            near_Fields[3] = Field_ID;                      // Field
+
+        }else{
+            // if selected field is in the bottom row and in the left column
+            near_Fields[0] = Field_ID - _columns;           // Top
+            near_Fields[1] = Field_ID - _columns + 1;       // Top-Right
+            near_Fields[2] = Field_ID;                      // Field
+            near_Fields[3] = Field_ID + 1;                  // Right
+        }
+    }else{  // if selected field is in the top row
+        if (((Field_ID % _columns) > 0) && ((Field_ID % _columns) < _columns-1))
+        {
+            // if selected field in the top row and between the left and right column
+            near_Fields[0] = Field_ID - 1;                  // Left
+            near_Fields[1] = Field_ID;                      // Field
+            near_Fields[2] = Field_ID + 1;                  // Right
+            near_Fields[3] = Field_ID + _columns - 1;       // Bottom-Left
+            near_Fields[4] = Field_ID + _columns;           // Bottom
+            near_Fields[5] = Field_ID + _columns + 1;       // Bottom-Right
+
+        }else if ((Field_ID % _columns) > 0)
+        {
+            // if selected field in the top row and in the right column
+            near_Fields[0] = Field_ID - 1;                  // Left
+            near_Fields[1] = Field_ID;                      // Field
+            near_Fields[2] = Field_ID + _columns - 1;       // Bottom-Left
+            near_Fields[3] = Field_ID + _columns;           // Bottom
+
+        }else{
+            
+            // if selected field in the top row and in the left column
+            near_Fields[0] = Field_ID;                      // Field
+            near_Fields[1] = Field_ID + 1;                  // Right
+            near_Fields[2] = Field_ID + _columns;           // Bottom
+            near_Fields[3] = Field_ID + _columns + 1;       // Bottom-Right
+        }
+    }
+
+    return near_Fields;
 }

@@ -40,6 +40,8 @@ class MainWindow : public QWidget
         void createMenu();
         void createFields();
         void startGame(uint16_t id);
+        void solveZeros(uint16_t id);
+        int16_t* getNearFields(uint16_t id);
         
         bool _GameStarted;
         
