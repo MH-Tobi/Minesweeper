@@ -32,7 +32,7 @@ A new game can also be started if desired.
 - [ ] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
 - [ ] Implement a Reaction when you encounter a mine
 - [ ] Implement a Reaction on success
-- [ ] Implement the usage of the right Mouse-Click to mark fields
-- [ ] Usage of Icons
+- [x] Implement the usage of the right Mouse-Click to mark fields
+- [x] Usage of Icons (Icons from https://de.freepik.com/)
 - [ ] Create a Bomb detection mouse
 - [ ] Clean up the Code :expressionless:
