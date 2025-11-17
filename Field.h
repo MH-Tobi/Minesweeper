@@ -24,12 +24,23 @@ class Field : public QPushButton
         int8_t getFieldNearMines();
         void setFieldNearMines(int8_t near_mines);
 
+        bool getFieldIsQuestionable();
+        bool getFieldIsMarked();
+
         uint16_t _FieldID;
         
     private:
         uint8_t _FieldSize;
         bool _FieldisMine;
         int8_t _FieldnearMines;
+
+        bool _FieldIsQuestionable;
+        bool _FieldIsMarked;
         
     public slots:
+        void mousePressEvent(QMouseEvent *e);
+        void setFieldIcon();
+
+    signals:
+        void rightClicked();
 };
