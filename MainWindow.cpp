@@ -9,21 +9,96 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QFormLayout>
+#include <QSpacerItem>
 #include "Field.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(15), _sum_mines(25), _Playfield(new QWidget(this)), _field_size(40)
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(15), _sum_mines(25), _Playfield(new QWidget(this)), _field_size(40), _FieldsToSolve(_rows*_columns-_sum_mines)
 {
-    QHBoxLayout *_Windowlayout = new QHBoxLayout;
+    QVBoxLayout *_Windowlayout = new QVBoxLayout;
     _Windowlayout->setContentsMargins(5, 5, 5, 5);
     setWindowTitle("Minesweeper");
     createMenu();
+    createStatisticWidget();
+
     _Windowlayout->setMenuBar(_MenuBar);
-    _Windowlayout->addWidget(_Playfield);    
+    _Windowlayout->addWidget(_StatisticWidget);
+    _Windowlayout->addWidget(_Playfield);
 
     NewGame();
 
     this->setLayout(_Windowlayout);
+}
+
+void MainWindow::createStatisticWidget()
+{
+    _StatisticWidget = new QWidget(this);
+
+    QGridLayout *_StatisticLayout = new QGridLayout(_StatisticWidget);
+    _StatisticLayout->setContentsMargins(5, 5, 5, 5);
+
+    _edit_count_solved_fields = new QLineEdit();
+    _edit_game_status = new QLineEdit();
+    _edit_count_marked_fields = new QLineEdit();
+    _button_mouse = new QPushButton();
+    _edit_timer = new QLineEdit();
+
+    _edit_count_solved_fields->setReadOnly(true);
+    _edit_game_status->setReadOnly(true);
+    _edit_count_marked_fields->setReadOnly(true);
+    _edit_timer->setReadOnly(true);
+
+    _edit_count_solved_fields->setFixedSize(QSize(80, 30));
+    _edit_game_status->setFixedSize(QSize(30, 30));
+    _edit_count_marked_fields->setFixedSize(QSize(80, 30));
+    _button_mouse->setFixedSize(QSize(30, 30));
+    _edit_timer->setFixedSize(QSize(80, 30));
+
+    _edit_count_solved_fields->setPlaceholderText("Solved Fields");
+    _edit_count_marked_fields->setPlaceholderText("Marked Fields");
+    _edit_timer->setPlaceholderText("Timer");
+
+    _edit_count_solved_fields->setStyleSheet(
+        "background-color: white;"
+        "font-family: Lucida Handwriting;"
+        "font-size: 16px;"
+        "font-color: black;"
+        "border-width: 1px;"
+        "border-style: solid;"
+        "border-color: lightgray;"
+    );
+    _edit_count_marked_fields->setStyleSheet(
+        "background-color: white;"
+        "font-family: Times New Roman;"
+        "font-size: 16px;"
+        "font-color: black;"
+        "border-width: 1px;"
+        "border-style: solid;"
+        "border-color: lightgray;"
+    );
+    _edit_timer->setStyleSheet(
+        "background-color: white;"
+        "font-family: Times New Roman;"
+        "font-size: 16px;"
+        "font-color: black;"
+        "border-width: 1px;"
+        "border-style: solid;"
+        "border-color: lightgray;"
+    );
+
+    QSpacerItem *spacerV1 = new QSpacerItem(1, 1, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Maximum);
+    _StatisticLayout->addItem(spacerV1, 0, 0, 1, 4);
+    _StatisticLayout->addWidget(_edit_count_solved_fields, 0, 4, 1, 1);
+    _StatisticLayout->addWidget(_edit_game_status, 0, 5, 1, 1);
+    _StatisticLayout->addWidget(_edit_count_marked_fields, 0, 6, 1, 1);
+    _StatisticLayout->addItem(spacerV1, 0, 7, 1, 1);
+    _StatisticLayout->addWidget(_button_mouse, 0, 8, 1, 1);
+    _StatisticLayout->addWidget(_edit_timer, 0, 9, 1, 1);
+
+    _StatisticLayout->setColumnStretch(0, 1);
+    _StatisticLayout->setColumnStretch(7, 1);
+
+    _StatisticWidget->setFixedHeight(35);
 }
 
 void MainWindow::createMenu()
@@ -63,12 +138,15 @@ void MainWindow::AboutQt()
 void MainWindow::NewGame()
 {
     _Playfield->resize(_field_size*_columns, _field_size*_rows);
-    
+
+    _FieldsToSolve = _rows*_columns-_sum_mines;
+    _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
+
     _GameStarted=false;
     
     createFields();
 
-    this->setFixedSize(_Playfield->width()+10, _Playfield->height()+45);
+    this->setFixedSize(_Playfield->width()+10, _Playfield->height()+85);
 }
 
 void MainWindow::createFields()
@@ -111,13 +189,15 @@ void MainWindow::fieldClicked(Field *field)
     {
         if (field->getFieldIsMine())
         {
-            //field->setStyleSheet("background-color: red;");
             field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
             field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
 
             field->setFlat(true);
             field->setEnabled(false);
         }else{
+            _FieldsToSolve--;
+            _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
+
             field->setText(QString::number(field->getFieldNearMines()));
             field->setFlat(true);
             field->setDisabled(true);
@@ -140,7 +220,7 @@ void MainWindow::solveZeros(uint16_t Field_ID)
         {
             if (!_Fields[nearFields[i]]->isFlat())
             {
-                fieldClicked(_Fields[nearFields[i]]);
+                _Fields[nearFields[i]]->click();
             }
         }
     }

@@ -38,6 +38,7 @@ class MainWindow : public QWidget
         QHBoxLayout *_Windowlayout;
         
         void createMenu();
+        void createStatisticWidget();
         void createFields();
         void startGame(uint16_t id);
         void solveZeros(uint16_t id);
@@ -47,6 +48,7 @@ class MainWindow : public QWidget
         
         QWidget *_Playfield;
         QWidget *_Settings_Window;
+        QWidget *_StatisticWidget;
 
         QMenuBar *_MenuBar;
         QMenu *_app_menu;
@@ -63,12 +65,19 @@ class MainWindow : public QWidget
         QLineEdit *_edit_number_mines;
         QLineEdit *_edit_field_size;
 
+        QLineEdit *_edit_count_solved_fields;
+        QLineEdit *_edit_game_status;
+        QLineEdit *_edit_count_marked_fields;
+        QLineEdit *_edit_timer;
+        QPushButton *_button_mouse;
+        
         QList<Field *> _Fields;
         
         uint16_t _rows;
         uint16_t _columns;
         uint16_t _sum_mines;
         uint16_t _field_size;
+        uint16_t _FieldsToSolve;
     
     public slots:
         void fieldClicked(Field *field);
