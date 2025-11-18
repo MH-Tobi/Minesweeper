@@ -13,7 +13,7 @@
 #include "Field.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(15), _sum_mines(25), _Playfield(new QWidget(this)), _field_size(40), _FieldsToSolve(_rows*_columns-_sum_mines)
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(15), _sum_mines(25), _Playfield(new QWidget(this)), _field_size(40), _FieldsToSolve(_rows*_columns-_sum_mines), _MouseIsUsed(false), _AvailableMouses(3)
 {
     QVBoxLayout *_Windowlayout = new QVBoxLayout;
     _Windowlayout->setContentsMargins(5, 5, 5, 5);
@@ -98,7 +98,37 @@ void MainWindow::createStatisticWidget()
     _StatisticLayout->setColumnStretch(0, 1);
     _StatisticLayout->setColumnStretch(7, 1);
 
+    _button_mouse->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mouse_available.png"));
+    _button_mouse->setIconSize(QSize(_button_mouse->width()*3/4,_button_mouse->height()*3/4));
+
     _StatisticWidget->setFixedHeight(35);
+
+    connect(_button_mouse, &QPushButton::clicked, this, &MainWindow::useMouse);
+}
+
+void MainWindow::useMouse()
+{
+    if (_MousesUsed > 0)
+    {
+        if (_MouseIsUsed)
+        {
+            _button_mouse->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mouse_available.png"));
+            _button_mouse->setIconSize(QSize(_button_mouse->width()*3/4,_button_mouse->height()*3/4));
+            _button_mouse->setDown(false);
+            _MouseIsUsed = false;
+        }else{
+            _button_mouse->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mouse_working.png"));
+            _button_mouse->setIconSize(QSize(_button_mouse->width()*3/4,_button_mouse->height()*3/4));
+            _button_mouse->setDown(true);
+            _MouseIsUsed = true;
+        }
+    }else{
+        _button_mouse->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mouse_available.png"));
+        _button_mouse->setIconSize(QSize(_button_mouse->width()*3/4,_button_mouse->height()*3/4));
+        _button_mouse->setDown(false);
+        _MouseIsUsed = false;
+        _button_mouse->setDisabled(true);
+    }
 }
 
 void MainWindow::createMenu()
@@ -141,7 +171,9 @@ void MainWindow::NewGame()
 
     _FieldsToSolve = _rows*_columns-_sum_mines;
     _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
-
+    
+    _button_mouse->setDisabled(false);
+    _MousesUsed=_AvailableMouses;
     _GameStarted=false;
     
     createFields();
@@ -185,29 +217,55 @@ void MainWindow::fieldClicked(Field *field)
         startGame(field->getFieldID());
     }
 
-    if (!(field->getFieldIsMarked() || field->getFieldIsQuestionable()))
+    if (_MouseIsUsed)
     {
-        if (field->getFieldIsMine())
+        if (!field->getFieldIsMarked())
         {
-            field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
-            field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
-
-            field->setFlat(true);
-            field->setEnabled(false);
-        }else{
-            _FieldsToSolve--;
-            _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
-
-            field->setText(QString::number(field->getFieldNearMines()));
-            field->setFlat(true);
-            field->setDisabled(true);
-
-            if (field->getFieldNearMines() == 0)
+            _MousesUsed--;
+            useMouse();
+            if (field->getFieldIsMine())
             {
-                solveZeros(field->getFieldID());
+                field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\flag.png"));
+                field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
+            }else{
+                _FieldsToSolve--;
+                _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
+
+                field->setText(QString::number(field->getFieldNearMines()));
+                field->setFlat(true);
+                field->setDisabled(true);
+
+                if (field->getFieldNearMines() == 0)
+                {
+                    solveZeros(field->getFieldID());
+                }
             }
         }
-    }
+    }else{
+        if (!(field->getFieldIsMarked() || field->getFieldIsQuestionable()))
+        {
+            if (field->getFieldIsMine())
+            {
+                field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
+                field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
+
+                field->setFlat(true);
+                field->setEnabled(false);
+            }else{
+                _FieldsToSolve--;
+                _edit_count_solved_fields->setText(QString::number(_FieldsToSolve));
+
+                field->setText(QString::number(field->getFieldNearMines()));
+                field->setFlat(true);
+                field->setDisabled(true);
+
+                if (field->getFieldNearMines() == 0)
+                {
+                    solveZeros(field->getFieldID());
+                }
+            }
+        }
+    }  
 }
 
 void MainWindow::solveZeros(uint16_t Field_ID)
