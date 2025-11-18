@@ -42,5 +42,5 @@ You can also mark a field as questionable or as potentially mine (by right-click
 - [ ] Implement a Reaction on success
 - [x] Implement the usage of the right Mouse-Click to mark fields
 - [x] Usage of Icons (Icons from https://de.freepik.com/)
-- [ ] Create a Bomb detection mouse
+- [x] Create a Bomb detection mouse
 - [ ] Clean up the Code :expressionless:
