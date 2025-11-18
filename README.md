@@ -32,6 +32,8 @@ You can also mark a field as questionable or as potentially mine (by right-click
   - [x] Changing the number of mines
   - [x] Changing the Size of the Fields
   - [ ] implement Setting-Validation
+- [ ] Implement Timer
+- [ ] Implement Counts
 - [ ] Implement Info about other things
 - [x] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
 - [ ] Implement a Reaction when you encounter a mine
