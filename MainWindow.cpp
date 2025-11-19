@@ -328,13 +328,13 @@ void MainWindow::startGame(uint16_t fieldID)
 {    
     int16_t *unallowedFields = getNearFields(fieldID);
 
-    uint16_t mines[_sum_mines];
+    uint16_t mines[_sum_mines] = {};
 
     uint16_t countMines = 0;
-    uint16_t columnRange[2] = {0,0};
-    uint16_t rowRange[2] = {0,0};
+    uint16_t columnRange[2] = {};
+    uint16_t rowRange[2] = {};
 
-    uint16_t map[_rows][_columns];
+    uint16_t map[_rows][_columns] = {};
     uint16_t f = 0;
 
     std::random_device rd;
