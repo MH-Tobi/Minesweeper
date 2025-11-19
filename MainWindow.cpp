@@ -418,11 +418,13 @@ void MainWindow::Settings()
     QLabel *labelNumberColumns = new QLabel("Number Columns");
     QLabel *labelNumberMines = new QLabel("Number Mines");
     QLabel *labelFieldSize = new QLabel("Field Size");
+    QLabel *labelAvailableMouses = new QLabel("Available Mouses");
 
     _edit_number_rows = new QLineEdit();
     _edit_number_columns = new QLineEdit();
     _edit_number_mines = new QLineEdit();
     _edit_field_size = new QLineEdit();
+    _edit_available_mouses = new QLineEdit();
 
     resetSettings();
 
@@ -430,6 +432,7 @@ void MainWindow::Settings()
     //_edit_number_columns->setValidator(new QIntValidator(5, 100));
     //_edit_number_mines->setValidator(new QIntValidator(1, 100));
     //_edit_field_size->setValidator(new QIntValidator(1, 50));
+    //_edit_available_mouses->setValidator(new QIntValidator(1, 5));
 
     QPushButton *buttonSet = new QPushButton("Set");
     QPushButton *buttonReset = new QPushButton("Reset");
@@ -442,6 +445,7 @@ void MainWindow::Settings()
     settingsLayout->addRow(labelNumberColumns, _edit_number_columns);
     settingsLayout->addRow(labelNumberMines, _edit_number_mines);
     settingsLayout->addRow(labelFieldSize, _edit_field_size);
+    settingsLayout->addRow(labelAvailableMouses, _edit_available_mouses);
     
     QHBoxLayout *button_layout = new QHBoxLayout(_settings_widget);
     button_layout->addWidget(buttonSet);
@@ -458,15 +462,18 @@ void MainWindow::Settings()
     _settings_widget->show();
 }
 
-uint16_t MainWindow::getNumRows()    {return _rows;}
-uint16_t MainWindow::getNumColumns() {return _columns;}
-uint16_t MainWindow::getNumMines()   {return _sum_mines;}
-uint16_t MainWindow::getFieldSize()  {return _field_size;}
+uint16_t MainWindow::getNumRows()         {return _rows;}
+uint16_t MainWindow::getNumColumns()      {return _columns;}
+uint16_t MainWindow::getNumMines()        {return _sum_mines;}
+uint16_t MainWindow::getFieldSize()       {return _field_size;}
+uint8_t  MainWindow::getAvailableMouses() {return _available_mouses;}
 
-void MainWindow::setNumRows(uint16_t value)    {_rows = value;}
-void MainWindow::setNumColumns(uint16_t value) {_columns = value;}
-void MainWindow::setNumMines(uint16_t value)   {_sum_mines = value;}
-void MainWindow::setFieldSize(uint16_t value)  {_field_size = value;}
+
+void MainWindow::setNumRows(uint16_t value)        {_rows = value;}
+void MainWindow::setNumColumns(uint16_t value)     {_columns = value;}
+void MainWindow::setNumMines(uint16_t value)       {_sum_mines = value;}
+void MainWindow::setFieldSize(uint16_t value)      {_field_size = value;}
+void MainWindow::setAvailableMouses(uint8_t value) {_available_mouses = value;}
 
 void MainWindow::setSettings()
 {
@@ -474,6 +481,7 @@ void MainWindow::setSettings()
     setNumColumns(_edit_number_columns->text().toInt());
     setNumMines(_edit_number_mines->text().toInt());
     setFieldSize(_edit_field_size->text().toInt());
+    setAvailableMouses(_edit_available_mouses->text().toInt());
 
     _settings_widget->close();
 }
@@ -484,6 +492,7 @@ void MainWindow::resetSettings()
     _edit_number_columns->setText(QString::number(getNumColumns()));
     _edit_number_mines->setText(QString::number(getNumMines()));
     _edit_field_size->setText(QString::number(getFieldSize()));
+    _edit_available_mouses->setText(QString::number(getAvailableMouses()));
 }
 
 void MainWindow::closeSettings()

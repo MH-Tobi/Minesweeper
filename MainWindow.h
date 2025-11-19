@@ -23,10 +23,12 @@ class MainWindow : public QWidget
         uint16_t getNumColumns();
         uint16_t getNumMines();
         uint16_t getFieldSize();
+        uint8_t  getAvailableMouses();
         void setNumRows(uint16_t value);
         void setNumColumns(uint16_t value);
         void setNumMines(uint16_t value);
         void setFieldSize(uint16_t value);
+        void setAvailableMouses(uint8_t value);
         
         void setSettings();
         void resetSettings();
@@ -72,6 +74,7 @@ class MainWindow : public QWidget
         QLineEdit *_edit_number_columns;
         QLineEdit *_edit_number_mines;
         QLineEdit *_edit_field_size;
+        QLineEdit *_edit_available_mouses;
 
         QLineEdit *_edit_count_solved_fields;
         QLineEdit *_edit_game_status;
