@@ -31,6 +31,7 @@ You can also mark a field as questionable or as potentially mine (by right-click
   - [x] Changing the number of columns
   - [x] Changing the number of mines
   - [x] Changing the Size of the Fields
+  - [x] Changing the number of available Mouses
   - [ ] implement Setting-Validation
 - [ ] Implement Timer
 - [ ] Implement Counts
