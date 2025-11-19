@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _sum_mines(25),
     _field_size(40),
     _fields_to_solve(_rows*_columns-_sum_mines),
+    _fields_marked(0),
     _mouse_in_use(false),
     _available_mouses(3),
     _playfield(new QWidget(this))
@@ -185,7 +186,10 @@ void MainWindow::NewGame()
 
     _fields_to_solve = _rows*_columns-_sum_mines;
     _edit_count_solved_fields->setText(QString::number(_fields_to_solve));
-    
+
+    _fields_marked = 0;
+    _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
+
     _button_mouse->setDisabled(false);
     _mouses_used=_available_mouses;
     _game_started=false;
@@ -220,6 +224,22 @@ void MainWindow::createFields()
         field->QPushButton::show();
         
         connect(field, &QPushButton::clicked, this, [this, field]{fieldClicked(field);});
+        connect(field, &Field::rightClicked, this, [this, field]{fieldRightClicked(field);});
+
+    }
+}
+
+void MainWindow::fieldRightClicked(Field *field)
+{
+    if (field->getFieldIsMarked())
+    {
+        _fields_marked++;
+        _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
+
+    }else if (field->getFieldIsQuestionable())
+    {
+        _fields_marked--;
+        _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
     }
 }
 
@@ -241,6 +261,10 @@ void MainWindow::fieldClicked(Field *field)
             {
                 field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\flag.png"));
                 field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
+
+                _fields_marked++;
+                _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
+
             }else{
                 _fields_to_solve--;
                 _edit_count_solved_fields->setText(QString::number(_fields_to_solve));

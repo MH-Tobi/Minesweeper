@@ -40,6 +40,7 @@ class MainWindow : public QWidget
         uint16_t _sum_mines;
         uint16_t _field_size;
         uint16_t _fields_to_solve;
+        uint16_t _fields_marked;
 
         uint8_t _available_mouses;
         uint8_t _mouses_used;
@@ -86,7 +87,9 @@ class MainWindow : public QWidget
         
     public slots:
         void fieldClicked(Field *field);
+        void fieldRightClicked(Field *field);
         void useMouse();
 
     signals:
+        void rightClicked();
 };
