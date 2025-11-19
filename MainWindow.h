@@ -35,6 +35,16 @@ class MainWindow : public QWidget
         void closeSettings();
         
     private:
+        uint16_t _rows;
+        uint16_t _columns;
+        uint16_t _sum_mines;
+        uint16_t _field_size;
+        uint16_t _FieldsToSolve;
+
+        uint8_t _AvailableMouses;
+        uint8_t _MousesUsed;
+        bool _MouseIsUsed;
+
         QHBoxLayout *_Windowlayout;
         
         void createMenu();
@@ -73,15 +83,7 @@ class MainWindow : public QWidget
         
         QList<Field *> _Fields;
         
-        uint16_t _rows;
-        uint16_t _columns;
-        uint16_t _sum_mines;
-        uint16_t _field_size;
-        uint16_t _FieldsToSolve;
-
-        uint8_t _AvailableMouses;
-        uint8_t _MousesUsed;
-        bool _MouseIsUsed;
+        
     
     public slots:
         void fieldClicked(Field *field);

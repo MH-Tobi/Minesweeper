@@ -13,7 +13,18 @@
 #include "Field.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), _rows(10), _columns(15), _sum_mines(25), _Playfield(new QWidget(this)), _field_size(40), _FieldsToSolve(_rows*_columns-_sum_mines), _MouseIsUsed(false), _AvailableMouses(3)
+MainWindow::MainWindow(QWidget *parent) :
+    QWidget(parent),
+    _rows(10),
+    _columns(15),
+    _sum_mines(25),
+    _field_size(40),
+    _FieldsToSolve(_rows*_columns-_sum_mines),
+    _MouseIsUsed(false),
+    _AvailableMouses(3),
+    _Playfield(new QWidget(this))
+    
+    
 {
     QVBoxLayout *_Windowlayout = new QVBoxLayout;
     _Windowlayout->setContentsMargins(5, 5, 5, 5);
