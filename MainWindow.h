@@ -4,10 +4,8 @@
 
 class Field;
 class QPushButton;
-class QMenu;
 class QMenuBar;
-class QAction;
-class QHBoxLayout;
+class QVBoxLayout;
 class QLineEdit;
 class MainWindow : public QWidget
 {
@@ -25,10 +23,10 @@ class MainWindow : public QWidget
         uint16_t getNumColumns();
         uint16_t getNumMines();
         uint16_t getFieldSize();
-        void setNumRows(uint16_t Value);
-        void setNumColumns(uint16_t Value);
-        void setNumMines(uint16_t Value);
-        void setFieldSize(uint16_t Value);
+        void setNumRows(uint16_t value);
+        void setNumColumns(uint16_t value);
+        void setNumMines(uint16_t value);
+        void setFieldSize(uint16_t value);
         
         void setSettings();
         void resetSettings();
@@ -39,28 +37,28 @@ class MainWindow : public QWidget
         uint16_t _columns;
         uint16_t _sum_mines;
         uint16_t _field_size;
-        uint16_t _FieldsToSolve;
+        uint16_t _fields_to_solve;
 
-        uint8_t _AvailableMouses;
-        uint8_t _MousesUsed;
-        bool _MouseIsUsed;
+        uint8_t _available_mouses;
+        uint8_t _mouses_used;
+        bool _mouse_in_use;
 
-        QHBoxLayout *_Windowlayout;
+        QVBoxLayout *_window_layout;
         
         void createMenu();
         void createStatisticWidget();
         void createFields();
         void startGame(uint16_t id);
         void solveZeros(uint16_t id);
-        int16_t* getNearFields(uint16_t id);
+        int16_t *getNearFields(uint16_t id);
         
-        bool _GameStarted;
+        bool _game_started;
         
-        QWidget *_Playfield;
-        QWidget *_Settings_Window;
-        QWidget *_StatisticWidget;
+        QWidget *_playfield;
+        QWidget *_settings_widget;
+        QWidget *_statistic_widget;
 
-        QMenuBar *_MenuBar;
+        QMenuBar *_menu_bar;
         QMenu *_app_menu;
         QAction *_new_game_action;
         QAction *_settings_action;
@@ -81,10 +79,8 @@ class MainWindow : public QWidget
         QLineEdit *_edit_timer;
         QPushButton *_button_mouse;
         
-        QList<Field *> _Fields;
+        QList<Field *> _fields;
         
-        
-    
     public slots:
         void fieldClicked(Field *field);
         void useMouse();
