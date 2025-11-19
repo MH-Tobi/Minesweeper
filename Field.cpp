@@ -1,38 +1,36 @@
 #include "Field.h"
-#include <QPushButton>
-#include <QWidget>
+
 #include <QMouseEvent>
-#include "MainWindow.h"
 
 
 Field::Field(uint16_t id, uint8_t size, QWidget *parent) :
     QPushButton(parent),
-    _FieldID(id),
-    _FieldSize(size),
-    _FieldisMine(false),
-    _FieldnearMines(-1),
-    _FieldIsQuestionable(false),
-    _FieldIsMarked(false)    
+    _field_id(id),
+    _field_size(size),
+    _field_is_mine(false),
+    _field_near_mines(-1),
+    _field_is_questionable(false),
+    _field_is_marked(false)    
 {
     connect(this, &Field::rightClicked, this, &Field::setFieldIcon);
 }
 
 Field::~Field(){}
 
-uint16_t Field::getFieldID()            {return _FieldID;}
-void     Field::setFieldID(uint16_t id) {_FieldID = id;}
+uint16_t Field::getFieldID()            {return _field_id;}
+void     Field::setFieldID(uint16_t id) {_field_id = id;}
 
-uint8_t Field::getFieldSize()             {return _FieldSize;}
-void    Field::setFieldSize(uint8_t size) {_FieldSize = size;}
+uint8_t Field::getFieldSize()             {return _field_size;}
+void    Field::setFieldSize(uint8_t size) {_field_size = size;}
 
-bool Field::getFieldIsMine()             {return _FieldisMine;}
-void Field::setFieldIsMine(bool is_mine) {_FieldisMine = is_mine;}
+bool Field::getFieldIsMine()             {return _field_is_mine;}
+void Field::setFieldIsMine(bool isMine) {_field_is_mine = isMine;}
 
-int8_t Field::getFieldNearMines()                  {return _FieldnearMines;}
-void   Field::setFieldNearMines(int8_t near_mines) {_FieldnearMines = near_mines;}
+int8_t Field::getFieldNearMines()                  {return _field_near_mines;}
+void   Field::setFieldNearMines(int8_t nearMines) {_field_near_mines = nearMines;}
 
-bool Field::getFieldIsQuestionable() {return _FieldIsQuestionable;};
-bool Field::getFieldIsMarked()       {return _FieldIsMarked;};
+bool Field::getFieldIsQuestionable() {return _field_is_questionable;};
+bool Field::getFieldIsMarked()       {return _field_is_marked;};
 
 void Field::mousePressEvent(QMouseEvent *e)
 {
@@ -46,24 +44,24 @@ void Field::mousePressEvent(QMouseEvent *e)
 
 void Field::setFieldIcon()
 {
-    if(_FieldIsMarked)
+    if(_field_is_marked)
     {
-        _FieldIsQuestionable = true;
-        _FieldIsMarked = false;
+        _field_is_questionable = true;
+        _field_is_marked = false;
         
         setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\questionmark.png"));
-        setIconSize(QSize(_FieldSize*3/4,_FieldSize*3/4));
+        setIconSize(QSize(_field_size*3/4,_field_size*3/4));
 
-    }else if (_FieldIsQuestionable)
+    }else if (_field_is_questionable)
     {
-        _FieldIsQuestionable = false;
+        _field_is_questionable = false;
 
         setIcon(QIcon());
         
     }else{
-        _FieldIsMarked = true;
+        _field_is_marked = true;
         
         setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\flag.png"));
-        setIconSize(QSize(_FieldSize*3/4,_FieldSize*3/4));
+        setIconSize(QSize(_field_size*3/4,_field_size*3/4));
     }
 }
