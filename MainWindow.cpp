@@ -58,6 +58,10 @@ void MainWindow::createStatisticWidget()
     _edit_count_marked_fields->setReadOnly(true);
     _edit_timer->setReadOnly(true);
 
+    _edit_count_solved_fields->setDisabled(true);
+    _edit_count_marked_fields->setDisabled(true);
+    _edit_timer->setDisabled(true);
+
     _edit_count_solved_fields->setFixedSize(QSize(80, 30));
     _edit_game_status->setFixedSize(QSize(30, 30));
     _edit_count_marked_fields->setFixedSize(QSize(80, 30));
