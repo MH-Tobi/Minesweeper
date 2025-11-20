@@ -33,14 +33,14 @@ You can also mark a field as questionable or as potentially mine (by right-click
   - [x] Changing the Size of the Fields
   - [x] Changing the number of available Mouses
   - [ ] implement Setting-Validation
-- [ ] Implement Timer
+- [x] Implement Timer
 - [x] Implement Counts
   - [x] Counts for solved fields
   - [x] Counts for marked fields
 - [ ] Implement Info about other things
 - [x] Implement collective dissolution of contiguous fields without a mine in the immediate vicinity
-- [ ] Implement a Reaction when you encounter a mine
-- [ ] Implement a Reaction on success
+- [x] Implement a Reaction when you encounter a mine
+- [x] Implement a Reaction on success
 - [x] Implement the usage of the right Mouse-Click to mark fields
 - [x] Usage of Icons (Icons from https://de.freepik.com/)
 - [x] Create a Bomb detection mouse
