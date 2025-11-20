@@ -15,6 +15,8 @@ qt_add_executable(Minesweeper
     MainWindow.h
     Field.cpp
     Field.h
+    TimingWorker.cpp
+    TimingWorker.h
     #window.ui
 )
 
