@@ -7,6 +7,8 @@ class QPushButton;
 class QMenuBar;
 class QVBoxLayout;
 class QLineEdit;
+class QThread;
+class TimingWorker;
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -43,6 +45,13 @@ class MainWindow : public QWidget
         uint16_t _fields_marked;
 
         uint8_t _available_mouses;
+
+        bool _mine_hit;
+
+        uint16_t _current_time;
+
+        uint16_t *_mines;
+
         uint8_t _mouses_used;
         bool _mouse_in_use;
 
@@ -54,9 +63,15 @@ class MainWindow : public QWidget
         void startGame(uint16_t id);
         void solveZeros(uint16_t id);
         int16_t *getNearFields(uint16_t id);
-        
+        void openAllMines();
+
+        void startTimer();
+
         bool _game_started;
         
+        QThread *_thread;
+        TimingWorker *_worker;
+
         QWidget *_playfield;
         QWidget *_settings_widget;
         QWidget *_statistic_widget;
@@ -78,10 +93,10 @@ class MainWindow : public QWidget
         QLineEdit *_edit_available_mouses;
 
         QLineEdit *_edit_count_solved_fields;
-        QLineEdit *_edit_game_status;
+        QPushButton *_button_game_status;
         QLineEdit *_edit_count_marked_fields;
-        QLineEdit *_edit_timer;
         QPushButton *_button_mouse;
+        QLineEdit *_edit_timer;
         
         QList<Field *> _fields;
         
@@ -89,7 +104,10 @@ class MainWindow : public QWidget
         void fieldClicked(Field *field);
         void fieldRightClicked(Field *field);
         void useMouse();
+        void createResult();
+        void increaseTimer();
 
     signals:
-        void rightClicked();
+        void gameFinished();
+        void stopTimer();
 };

@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "Field.h"
+#include "TimingWorker.h"
 
 #include <QVBoxLayout>
 #include <QMenuBar>
@@ -8,6 +9,7 @@
 #include <QApplication>
 #include <QLabel>
 #include <QFormLayout>
+#include <QThread>
 
 #include <random>
 
@@ -22,9 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _fields_marked(0),
     _mouse_in_use(false),
     _available_mouses(3),
-    _playfield(new QWidget(this))
-    
-    
+    _mine_hit(false),
+    _current_time(0),
+    _playfield(new QWidget(this))    
 {
     _window_layout = new QVBoxLayout;
     _window_layout->setContentsMargins(5, 5, 5, 5);
@@ -36,9 +38,63 @@ MainWindow::MainWindow(QWidget *parent) :
     _window_layout->addWidget(_statistic_widget);
     _window_layout->addWidget(_playfield);
 
+    connect(this, &MainWindow::gameFinished, this, &MainWindow::createResult);
+
     NewGame();
 
     this->setLayout(_window_layout);
+}
+
+void MainWindow::createResult()
+{
+    if (_fields_to_solve == 0)
+    {
+        _button_game_status->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\smiling_face.png"));
+        _button_game_status->setIconSize(QSize(_button_game_status->width()*3/4,_button_game_status->height()*3/4));
+    
+    }else if (_mine_hit)
+    {
+        _mine_hit = false;
+
+        _button_game_status->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\sad_face.png"));
+        _button_game_status->setIconSize(QSize(_button_game_status->width()*3/4,_button_game_status->height()*3/4));
+
+        openAllMines();
+    }
+    
+    emit stopTimer();
+}
+
+
+void MainWindow::startTimer()
+{
+    auto *thread = new QThread();
+    auto *worker = new TimingWorker();
+
+    worker->moveToThread(thread);
+
+    connect(thread, &QThread::started, worker, &TimingWorker::doWork);
+    connect(worker, &TimingWorker::timeIncreasedOneSecond, this, &MainWindow::increaseTimer);
+    connect(worker, &TimingWorker::done, thread, &QThread::quit);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    connect(this, &MainWindow::stopTimer, worker, &TimingWorker::cancel);
+
+    thread->start();
+}
+
+void MainWindow::increaseTimer()
+{
+    _current_time++;
+    _edit_timer->setText(QString::number(_current_time));
+}
+
+void MainWindow::openAllMines()
+{
+    for (size_t i = 0; i < _sum_mines; i++)
+    {
+        _fields[_mines[i]]->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
+        _fields[_mines[i]]->setIconSize(QSize(_fields[_mines[i]]->getFieldSize()*3/4,_fields[_mines[i]]->getFieldSize()*3/4));
+    }
 }
 
 void MainWindow::createStatisticWidget()
@@ -49,13 +105,12 @@ void MainWindow::createStatisticWidget()
     statisticLayout->setContentsMargins(5, 5, 5, 5);
 
     _edit_count_solved_fields = new QLineEdit();
-    _edit_game_status = new QLineEdit();
+    _button_game_status = new QPushButton();
     _edit_count_marked_fields = new QLineEdit();
     _button_mouse = new QPushButton();
     _edit_timer = new QLineEdit();
 
     _edit_count_solved_fields->setReadOnly(true);
-    _edit_game_status->setReadOnly(true);
     _edit_count_marked_fields->setReadOnly(true);
     _edit_timer->setReadOnly(true);
 
@@ -64,7 +119,7 @@ void MainWindow::createStatisticWidget()
     _edit_timer->setDisabled(true);
 
     _edit_count_solved_fields->setFixedSize(QSize(80, 30));
-    _edit_game_status->setFixedSize(QSize(30, 30));
+    _button_game_status->setFixedSize(QSize(30, 30));
     _edit_count_marked_fields->setFixedSize(QSize(80, 30));
     _button_mouse->setFixedSize(QSize(30, 30));
     _edit_timer->setFixedSize(QSize(80, 30));
@@ -104,7 +159,7 @@ void MainWindow::createStatisticWidget()
     QSpacerItem *spacerV1 = new QSpacerItem(1, 1, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Maximum);
     statisticLayout->addItem(spacerV1, 0, 0, 1, 4);
     statisticLayout->addWidget(_edit_count_solved_fields, 0, 4, 1, 1);
-    statisticLayout->addWidget(_edit_game_status, 0, 5, 1, 1);
+    statisticLayout->addWidget(_button_game_status, 0, 5, 1, 1);
     statisticLayout->addWidget(_edit_count_marked_fields, 0, 6, 1, 1);
     statisticLayout->addItem(spacerV1, 0, 7, 1, 1);
     statisticLayout->addWidget(_button_mouse, 0, 8, 1, 1);
@@ -112,6 +167,11 @@ void MainWindow::createStatisticWidget()
 
     statisticLayout->setColumnStretch(0, 1);
     statisticLayout->setColumnStretch(7, 1);
+
+    _button_game_status->setCheckable(false);
+
+    _button_game_status->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\open.png"));
+    _button_game_status->setIconSize(QSize(_button_game_status->width()*3/4,_button_game_status->height()*3/4));
 
     _button_mouse->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mouse_available.png"));
     _button_mouse->setIconSize(QSize(_button_mouse->width()*3/4,_button_mouse->height()*3/4));
@@ -182,13 +242,24 @@ void MainWindow::AboutQt()
 
 void MainWindow::NewGame()
 {
+    if (_game_started)
+    {
+        emit gameFinished();
+    }
+    
     _playfield->resize(_field_size*_columns, _field_size*_rows);
+
+    _button_game_status->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\open.png"));
+    _button_game_status->setIconSize(QSize(_button_game_status->width()*3/4,_button_game_status->height()*3/4));
 
     _fields_to_solve = _rows*_columns-_sum_mines;
     _edit_count_solved_fields->setText(QString::number(_fields_to_solve));
 
     _fields_marked = 0;
     _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
+
+    _current_time = 0;
+    _edit_timer->setText(QString::number(_current_time));
 
     _button_mouse->setDisabled(false);
     _mouses_used=_available_mouses;
@@ -249,6 +320,8 @@ void MainWindow::fieldClicked(Field *field)
     {
         _game_started = true;
         startGame(field->getFieldID());
+
+        startTimer();
     }
 
     if (_mouse_in_use)
@@ -286,9 +359,14 @@ void MainWindow::fieldClicked(Field *field)
             {
                 field->setIcon(QIcon("D:\\Projekte\\Minesweeper\\icons\\mine_blasted.png"));
                 field->setIconSize(QSize(field->getFieldSize()*3/4,field->getFieldSize()*3/4));
-
+                
                 field->setFlat(true);
                 field->setEnabled(false);
+
+                _mine_hit = true;
+
+                emit gameFinished();
+
             }else{
                 _fields_to_solve--;
                 _edit_count_solved_fields->setText(QString::number(_fields_to_solve));
@@ -303,7 +381,12 @@ void MainWindow::fieldClicked(Field *field)
                 }
             }
         }
-    }  
+    }
+
+    if (_fields_to_solve == 0)
+    {
+        emit gameFinished();
+    }
 }
 
 void MainWindow::solveZeros(uint16_t fieldID)
@@ -328,7 +411,8 @@ void MainWindow::startGame(uint16_t fieldID)
 {    
     int16_t *unallowedFields = getNearFields(fieldID);
 
-    uint16_t mines[_sum_mines] = {};
+    //uint16_t _mines[_sum_mines] = {};
+    _mines = new uint16_t[_sum_mines]{};
 
     uint16_t countMines = 0;
     uint16_t columnRange[2] = {};
@@ -360,18 +444,18 @@ void MainWindow::startGame(uint16_t fieldID)
         {
             if (f>0)
             {
-                mines[f] = randomValue;
+                _mines[f] = randomValue;
                 f++;
                 map[k][l] = 9;
                 for (uint16_t i = 0; i < f-1; i++)
                 {
-                    if (randomValue == mines[i])
+                    if (randomValue == _mines[i])
                     {
                         f--;
                     }
                 }
             }else{
-                mines[f] = randomValue;
+                _mines[f] = randomValue;
                 f++;
                 map[k][l] = 9;
             }
