@@ -17,7 +17,6 @@ qt_add_executable(Minesweeper
     Field.h
     TimingWorker.cpp
     TimingWorker.h
-    #window.ui
 )
 
 target_link_libraries(Minesweeper PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
