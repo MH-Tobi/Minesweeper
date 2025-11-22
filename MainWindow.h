@@ -55,6 +55,7 @@ class MainWindow : public QWidget
         // Helper Methods
         int16_t *getNearFields(uint16_t id);
         void setButtonIcon(QPushButton *button, QString icon);
+        void setNearMinesText(Field *field);
 
         // Elements for the Gameplay
         uint16_t _rows;

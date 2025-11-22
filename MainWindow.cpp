@@ -577,6 +577,55 @@ void MainWindow::setButtonIcon(QPushButton *button, QString icon)
     button->setIconSize(QSize(button->width()*3/4,button->height()*3/4));
 }
 
+void MainWindow::setNearMinesText(Field *field)
+{
+    field->setText(QString::number(field->getFieldNearMines()));
+    field->setFlat(true);
+    field->setDisabled(true);
+
+    switch (field->getFieldNearMines())
+    {
+    case 0:
+        field->setText("");
+        break;
+
+    case 1:
+        field->setStyleSheet("color: blue;");
+        break;
+
+    case 2:
+        field->setStyleSheet("color: green;");
+        break;
+    
+    case 3:
+        field->setStyleSheet("color: red;");
+        break;
+
+    case 4:
+        field->setStyleSheet("color: dark purple;");
+        break;
+
+    case 5:
+        field->setStyleSheet("color: maroon;");
+        break;
+
+    case 6:
+        field->setStyleSheet("color: cyan;");
+        break;
+
+    case 7:
+        field->setStyleSheet("color: purple;");
+        break;
+
+    case 8:
+        field->setStyleSheet("color: gray;");
+        break;
+
+    default:
+        break;
+    }
+}
+
 
 /* 
 Slots
@@ -609,9 +658,7 @@ void MainWindow::fieldClicked(Field *field)
                 _fields_to_solve--;
                 _edit_count_solved_fields->setText(QString::number(_fields_to_solve));
 
-                field->setText(QString::number(field->getFieldNearMines()));
-                field->setFlat(true);
-                field->setDisabled(true);
+                setNearMinesText(field);
 
                 if (field->getFieldNearMines() == 0)
                 {
@@ -637,9 +684,7 @@ void MainWindow::fieldClicked(Field *field)
                 _fields_to_solve--;
                 _edit_count_solved_fields->setText(QString::number(_fields_to_solve));
 
-                field->setText(QString::number(field->getFieldNearMines()));
-                field->setFlat(true);
-                field->setDisabled(true);
+                setNearMinesText(field);
 
                 if (field->getFieldNearMines() == 0)
                 {
