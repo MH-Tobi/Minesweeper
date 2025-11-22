@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QFormLayout>
 #include <QThread>
+#include <QIntValidator>
 
 #include <random>
 
@@ -171,11 +172,11 @@ void MainWindow::openSettingsWindow()
 
     resetSettings();
 
-    //_edit_number_rows->setValidator(new QIntValidator(5, 100));
-    //_edit_number_columns->setValidator(new QIntValidator(5, 100));
-    //_edit_number_mines->setValidator(new QIntValidator(1, 100));
-    //_edit_field_size->setValidator(new QIntValidator(1, 50));
-    //_edit_available_mouses->setValidator(new QIntValidator(1, 5));
+    _edit_number_rows->setValidator(new QIntValidator(5, 100));
+    _edit_number_columns->setValidator(new QIntValidator(5, 100));
+    _edit_number_mines->setValidator(new QIntValidator(1, 100));
+    _edit_field_size->setValidator(new QIntValidator(5, 50));
+    _edit_available_mouses->setValidator(new QIntValidator(0, 5));
 
     QPushButton *buttonSet = new QPushButton("Set");
     QPushButton *buttonReset = new QPushButton("Reset");
@@ -219,13 +220,20 @@ void MainWindow::setAvailableMouses(uint8_t value) {_available_mouses = value;}
 
 void MainWindow::setSettings()
 {
-    setNumRows(_edit_number_rows->text().toInt());
-    setNumColumns(_edit_number_columns->text().toInt());
-    setNumMines(_edit_number_mines->text().toInt());
-    setFieldSize(_edit_field_size->text().toInt());
-    setAvailableMouses(_edit_available_mouses->text().toInt());
+    if (_edit_number_rows->hasAcceptableInput() &&
+        _edit_number_columns->hasAcceptableInput() &&
+        _edit_number_mines->hasAcceptableInput() &&
+        _edit_field_size->hasAcceptableInput() &&
+        _edit_available_mouses->hasAcceptableInput())
+    {
+        setNumRows(_edit_number_rows->text().toInt());
+        setNumColumns(_edit_number_columns->text().toInt());
+        setNumMines(_edit_number_mines->text().toInt());
+        setFieldSize(_edit_field_size->text().toInt());
+        setAvailableMouses(_edit_available_mouses->text().toInt());
 
-    _settings_widget->close();
+        _settings_widget->close();
+    }
 }
 
 void MainWindow::resetSettings()
