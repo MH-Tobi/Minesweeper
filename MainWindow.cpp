@@ -650,6 +650,8 @@ void MainWindow::fieldClicked(Field *field)
             if (field->getFieldIsMine())
             {
                 setButtonIcon(field, "flag");
+                
+                field->setFieldIsMarked(true);
 
                 _fields_marked++;
                 _edit_count_marked_fields->setText(QString::number(_fields_marked) + "/" + QString::number(_sum_mines));
