@@ -29,8 +29,11 @@ void Field::setFieldIsMine(bool isMine) {_field_is_mine = isMine;}
 int8_t Field::getFieldNearMines()                  {return _field_near_mines;}
 void   Field::setFieldNearMines(int8_t nearMines) {_field_near_mines = nearMines;}
 
-bool Field::getFieldIsQuestionable() {return _field_is_questionable;};
-bool Field::getFieldIsMarked()       {return _field_is_marked;};
+bool Field::getFieldIsQuestionable()           {return _field_is_questionable;}
+void Field::setFieldIsQuestionable(bool value) {_field_is_questionable = value;}
+
+bool Field::getFieldIsMarked()           {return _field_is_marked;}
+void Field::setFieldIsMarked(bool value) {_field_is_marked = value;}
 
 void Field::mousePressEvent(QMouseEvent *e)
 {

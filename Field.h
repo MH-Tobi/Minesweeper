@@ -24,7 +24,10 @@ class Field : public QPushButton
         void   setFieldNearMines(int8_t nearMines);
 
         bool getFieldIsQuestionable();
+        void setFieldIsQuestionable(bool value);
+
         bool getFieldIsMarked();
+        void setFieldIsMarked(bool value);
 
     private:
         uint16_t _field_id;
