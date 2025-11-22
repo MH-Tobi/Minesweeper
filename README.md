@@ -24,6 +24,46 @@ A new game can also be started if desired.
 
 You can also mark a field as questionable or as potentially mine (by right-clicking).
 
+## How to Play
+
+When you launch the application, you can start the game immediately by clicking on a field.
+
+In the background, this first creates the minefield and starts the timer in the upper right corner. You always start in a field without any mines in your immediate vicinity.
+
+<img src="/img/Game_Start.jpg" alt="Start Game" width="200" height="100">
+
+The revealed fields then indicate the number of mines located in the immediate vicinity.
+
+<img src="/img/Mines_near_Field.jpg" alt="Count Mines near the Field" width="100" height="100">
+
+If you are certain that there is a mine in a particular field, you can mark the field with a flag by right-clicking. This will protect the field from being accidentally triggered.
+
+<img src="/img/Flag_a_Field.jpg" alt="Mark a Field with Flag" width="100" height="100">
+
+If you're unsure, you can mark the field as questionable by right-clicking again.
+
+This will also protect the field from being accidentally activated.
+
+<img src="/img/Field_is_questionable.jpg" alt="Mark a Field as Questionable" width="100" height="100">
+
+To solve the game board, you must uncover all the fields without mines. The number of mines in the game board is shown in the third field above the game board.
+
+<img src="/img/Status_Fields.jpg" alt="Game Status Fields" width="100" height="100">
+
+In particularly difficult situations, it is not possible to find out where a mine might be located.
+
+<img src="/img/Difficult_Field.jpg" alt="Where is a Mine?" width="100" height="100">
+
+This is where the mine detector mouse comes in.
+
+By activating the mine detector mouse, you can switch it from waiting mode(<img src="/icons/mouse_available.png" alt="Mouse waiting" width="40" height="40">) to working mode (<img src="/icons/mouse_working.png" alt="Mouse working" width="40" height="40">).
+
+Now you can click on any field (not marked with a flag). If there is a mine in that field, the mine detector mouse will place a flag. If not, the field will be cleared. If you don't need the mine detector mouse after all, you can put it back into waiting mode.
+
+However, you only have limited access to mine detector mouse( 3 by default). So choose wisely.
+
+Once you have cleared all the empty fields, the game ends and the timer stops.
+
 ## To-Do's
 
 - [x] Implement Settings
