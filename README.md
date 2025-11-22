@@ -56,7 +56,7 @@ In particularly difficult situations, it is not possible to find out where a min
 
 This is where the mine detector mouse comes in.
 
-By activating the mine detector mouse, you can switch it from waiting mode(<img src="/icons/mouse_available.png" alt="Mouse waiting" width="40" height="40">) to working mode (<img src="/icons/mouse_working.png" alt="Mouse working" width="40" height="40">).
+By activating the mine detector mouse, you can switch it from waiting mode (<img src="/icons/mouse_available.png" alt="Mouse waiting" width="20" height="20">) to working mode (<img src="/icons/mouse_working.png" alt="Mouse working" width="20" height="20">).
 
 Now you can click on any field (not marked with a flag). If there is a mine in that field, the mine detector mouse will place a flag. If not, the field will be cleared. If you don't need the mine detector mouse after all, you can put it back into waiting mode.
 
