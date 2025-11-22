@@ -26,13 +26,13 @@ You can also mark a field as questionable or as potentially mine (by right-click
 
 ## To-Do's
 
-- [ ] Implement Settings
+- [x] Implement Settings
   - [x] Changing the number of rows
   - [x] Changing the number of columns
   - [x] Changing the number of mines
   - [x] Changing the Size of the Fields
   - [x] Changing the number of available Mouses
-  - [ ] implement Setting-Validation
+  - [x] implement Setting-Validation
 - [x] Implement Timer
 - [x] Implement Counts
   - [x] Counts for solved fields
