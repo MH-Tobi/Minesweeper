@@ -23,10 +23,10 @@ void     Field::setFieldID(uint16_t id) {_field_id = id;}
 uint8_t Field::getFieldSize()             {return _field_size;}
 void    Field::setFieldSize(uint8_t size) {_field_size = size;}
 
-bool Field::getFieldIsMine()             {return _field_is_mine;}
+bool Field::getFieldIsMine()            {return _field_is_mine;}
 void Field::setFieldIsMine(bool isMine) {_field_is_mine = isMine;}
 
-int8_t Field::getFieldNearMines()                  {return _field_near_mines;}
+int8_t Field::getFieldNearMines()                 {return _field_near_mines;}
 void   Field::setFieldNearMines(int8_t nearMines) {_field_near_mines = nearMines;}
 
 bool Field::getFieldIsQuestionable()           {return _field_is_questionable;}
