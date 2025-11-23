@@ -30,13 +30,13 @@ You can also mark a field as questionable or as potentially mine (by right-click
 
 Two menu items are provided.
 
-<img src="/img/App_Menu.jpg" alt="App Menu" width="150" height="150">
+<img src="/img/App_Menu.jpg" alt="App Menu" width="100" height="100">
 
 In the **App** menu, a new game can be started via the **New** menu item.
 The **Settings** menu item opens a new window where certain game settings can be changed.
 The **Quit** menu item closes the application.
 
-<img src="/img/Info_Menu.jpg" alt="Info Menu" width="150" height="150">
+<img src="/img/Info_Menu.jpg" alt="Info Menu" width="100" height="100">
 
 The **Info** menu provides some information about the application.
 The **About Qt** menu item displays information about the Qt version used.
