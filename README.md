@@ -24,6 +24,43 @@ A new game can also be started if desired.
 
 You can also mark a field as questionable or as potentially mine (by right-clicking).
 
+## Menu
+
+<img src="/img/Menu.jpg" alt="Menu" width="400" height="100">
+
+Two menu items are provided.
+
+<img src="/img/App_Menu.jpg" alt="App Menu" width="150" height="150">
+
+In the **App** menu, a new game can be started via the **New** menu item.
+The **Settings** menu item opens a new window where certain game settings can be changed.
+The **Quit** menu item closes the application.
+
+<img src="/img/Info_Menu.jpg" alt="Info Menu" width="150" height="150">
+
+The **Info** menu provides some information about the application.
+The **About Qt** menu item displays information about the Qt version used.
+The **About Other** menu item contains information about other elements of the application.
+
+## Settings
+
+<img src="/img/Settings.jpg" alt="Settings" width="200" height="200">
+
+The **Settings** window allows you to configure the following:
+
+- Number of rows
+- Number of columns
+- Number of mines in the playing field
+- Field size in pixels
+- Number of mine detector mouse
+
+Changes can then be applied using the **Set** button.
+The window will then close automatically.
+
+If you decide you don't want to accept the changes, you can use the **Reset** button to return to the previous settings or use **Quit** to close the **Settings** window.
+
+Changed settings will only take effect when a new game is started.
+
 ## How to Play
 
 When you launch the application, you can start the game immediately by clicking on a field.
@@ -82,6 +119,6 @@ Once you have cleared all the empty fields, the game ends and the timer stops.
 - [x] Implement a Reaction when you encounter a mine
 - [x] Implement a Reaction on success
 - [x] Implement the usage of the right Mouse-Click to mark fields
-- [x] Usage of Icons (Icons from https://de.freepik.com/)
+- [x] Usage of Icons (Icons from <https://de.freepik.com/>)
 - [x] Create a Bomb detection mouse
 - [ ] Clean up the Code :expressionless:
